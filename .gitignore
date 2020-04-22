@@ -1,0 +1,10 @@
+# Dependency directories
+
+# Private 
+*.pem
+fs/comandos.js
+flash
+/build
+/keys
+build/build.log
+build/gen/build_stat.json

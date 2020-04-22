@@ -1,0 +1,102 @@
+arch: esp8266
+mos author: Cristian Valdivia
+description: iOLED Firmware
+version: 1.1.1
+manifest_version: 2018-05-18
+libs_version: ${mos.version}
+modules_version: ${mos.version}
+mongoose_os_version: ${mos.version}
+
+config_schema:
+  # Button control
+  - ['board.btn1.pin', 'i', 0, {title: 'Button pin for AP'}]
+
+  # led1 config
+  - ['board.led1.active_high', 'b', true, {title: 'True if LED is on when output is high (1)'}]
+  - ['board.led1.duty', 'd', 1.0, {title: 'Integrated Led duty cycle'}]
+  - ['board.led1.freq', 'i', 100, {title: 'Integrated Led frequency'}]
+  - ['board.led1.pin', 14]
+  - ['board.led1.state', 'b', true, {title: 'Integrated Led current state'}]
+
+  # led2 config
+  - ['board.led2.active_high', 'b', true, {title: 'True if LED is on when output is high (1)'}]
+  - ['board.led2.duty', 'd', 1.0, {title: 'Integrated Led duty cycle'}]
+  - ['board.led2.freq', 'i', 100, {title: 'Integrated Led frequency'}]
+  - ['board.led2.pin', 'i', 12, {title: 'Led pin for PWM'}]
+  - ['board.led2.state', 'b', true, {title: 'Integrated Led current state'}]
+
+  # Neopixel config
+  - ['board.neopixel.state', 'b', true, {title: 'Led current state'}]
+  - ['board.neopixel.pin', 'i', 15, {title: 'Neopixel pin'}]
+  - ['board.neopixel.pixels', 'i', 3, {title: 'Neopixel number of pixels'}]
+
+  # OTA URL
+  - ['Update', 'o', {title: 'Firmware updater'}]
+  - ['Update.timeout', 'i', 60000, {title: 'Update will be aborted if it does not finish within this time'}]
+
+  # Timer
+  - ['board.timer.timerOn', 's', '00:00', {title: 'Turn on time'}]
+  - ['board.timer.timerOff', 's', '00:00', {title: 'Turn off time'}]
+  - ['board.timer.timerState', 'b', false, {title: 'Timer state'}]
+
+  # Time zone
+  - ['sys.tz_spec', 's', 'CLST3', {title: 'CHile Summer Timer'}]
+
+  # Enable I2C
+  - ['i2c.enable', 'b', true, {title: 'Enable I2C'}]
+  - ['i2c.freq', 'i', 100000, {title: 'I2C bus speed'}]
+  - ['i2c.unit_no', 'i', 0, {title: 'Which hardware unit ot use, 0 or 1'}]
+  - ['i2c.sda_gpio', 'i', 5, {title: 'GPIO to use for SDA'}]
+  - ['i2c.scl_gpio', 'i', 4, {title: 'GPIO to use for SCL'}]
+
+  # Config for mDash
+  - ['dash.enable', 'b', false, {'title': 'Enable'}]
+  - ['dash.token', 's', '', {'title': 'Access token'}]
+  - ['dash.server', 's', 'wss://mdash.net/api/v2/rpc', {'title': 'Server address'}]
+  - ['dash.ssl_cert', 's', '', {title: 'Client certificate to present to the server'}]
+  - ['dash.ssl_key', 's', '', {title: 'Private key corresponding to the certificate'}]
+  - ['dash.ssl_ca_cert', 's', 'ca.pem', {'title': 'Verify server certificate using this CA bundle'}]
+  - ['dash.send_logs', 'b', false, {'title': 'Send logs'}]
+
+tags:
+  - js
+
+filesystem:
+  - fs
+
+# ffi_symbols:
+#   - mgos_cron_remove
+
+# - origin: https://github.com/mongoose-os-libs/<lib>
+libs:
+  # boards include wifi lib.
+  - origin: https://github.com/mongoose-os-libs/boards
+  - origin: https://github.com/mongoose-os-libs/mjs
+  - origin: https://github.com/mongoose-os-libs/pwm
+  - origin: https://github.com/mongoose-os-libs/rpc-uart
+  - origin: https://github.com/mongoose-os-libs/rpc-common
+  - origin: https://github.com/mongoose-os-libs/rpc-service-config
+  - origin: https://github.com/mongoose-os-libs/rpc-service-fs
+  - origin: https://github.com/mongoose-os-libs/rpc-loopback
+  - origin: https://github.com/mongoose-os-libs/rpc-service-i2c
+  # ota rpc
+  - origin: https://github.com/mongoose-os-libs/ota-common
+  - origin: https://github.com/mongoose-os-libs/rpc-service-ota
+  - origin: https://github.com/mongoose-os-libs/http-server
+  - origin: https://github.com/mongoose-os-libs/ota-common
+  - origin: https://github.com/mongoose-os-libs/ota-http-client
+  # gcp include mqtt and ca-bundle (certificates).
+  - origin: https://github.com/mongoose-os-libs/gcp
+  # Access point for wifi
+  - origin: https://github.com/mongoose-os-libs/http-server
+  # Neopixel lib
+  - origin: https://github.com/mongoose-os-libs/neopixel
+  # CRON
+  - origin: https://github.com/mongoose-os-libs/cron
+  # I2C
+  - origin: https://github.com/mongoose-os-libs/i2c
+  # mDash
+  - origin: https://github.com/mongoose-os-libs/dash
+  - origin: https://github.com/mongoose-os-libs/core
+  - origin: https://github.com/mongoose-os-libs/rpc-ws
+  - origin: https://github.com/mongoose-os-libs/shadow
