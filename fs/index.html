@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="axios.min.js"></script>
     <style>
       html,
@@ -8,13 +9,20 @@
         height: 100vh;
         padding: 0;
         margin: 0;
+        background-color: #1a191e;
       }
       * {
         outline: none !important;
       }
       body {
-        color: #454955;
+        color: #ffffff;
         font: 15px/1.5 Verdana, Helvetica, Arial, sans-serif;
+        font-family: Helvetica, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        
       }
       h1,
       h2,
@@ -26,7 +34,7 @@
       th,
       strong,
       .nav-link {
-        color: #777;
+        color: #ffffff;
       }
       input,
       button,
@@ -47,6 +55,7 @@
         position: relative;
         border: 1px solid #cdcdcd;
         border-color: rgba(0, 0, 0, 0.15);
+        border-radius: 12px;
         background-color: white;
         font-size: 16px;
       }
@@ -59,7 +68,9 @@
         padding: 0 1em;
         margin: 1em auto;
         max-width: 480px;
-        background: #fafafa;
+        background: #323039;
+        border-radius: 24px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
       }
       .form-control {
         margin: 0.5em 0;
@@ -71,12 +82,19 @@
       .form label {
         min-width: 8em;
         display: inline-block;
+        text-align: end;
+        padding-right: 6px;
       }
       .form {
         padding: 1em 0;
       }
       .btn {
-        background: #2079b0;
+        background: linear-gradient(45deg, #29ABE2 0%, #00EAA6 100%);
+        border-radius: 12px;
+        transition:background 600ms ease-in-out;
+      }
+      .btn:hover{
+        background: linear-gradient(45deg, #29ABE2 20%, #00EAA6 120%);
       }
       .spin {
         display: inline-block;
@@ -89,6 +107,10 @@
         animation: spin 1s linear infinite;
         -webkit-animation: spin 1s linear infinite;
       }
+      .logotype{
+        background: none;
+        box-shadow: 0px 5px 12px rgba(255, 255, 255, 0.78);
+      }
       @keyframes spin {
         to {
           transform: rotate(360deg);
@@ -99,9 +121,33 @@
           -webkit-transform: rotate(360deg);
         }
       }
+      @media only screen and ( max-width: 600px) {
+        .container{
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+        h1{
+          font-size: 5vw;
+        }
+        .form{
+          width: ;
+        }
+        .form div{
+          display: flex;
+          flex-direction: column;
+        }
+        .btn{
+          margin: 0 20px;
+        }
+      }
     </style>
   </head>
   <body>
+    <div>
+      <object type="image/svg+xml"data="./new-logo.svg" width="100px" height="100px"></object>
+    </div>
     <div class="container">
       <h1 class="">Configuración WIFI</h1>
       <div class="form">
