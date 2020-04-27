@@ -1,7 +1,7 @@
 arch: esp8266
 mos author: Cristian Valdivia
 description: iOLED Firmware
-version: 1.1.1
+version: 1.2.0
 manifest_version: 2018-05-18
 libs_version: ${mos.version}
 modules_version: ${mos.version}
@@ -10,6 +10,9 @@ mongoose_os_version: ${mos.version}
 config_schema:
   # Button control
   - ['board.btn1.pin', 'i', 0, {title: 'Button pin for AP'}]
+
+  # AP activate
+  - ['board.ap.state', 'b', false, {title: 'AP state'}]
 
   # led1 config
   - ['board.led1.active_high', 'b', true, {title: 'True if LED is on when output is high (1)'}]
@@ -57,6 +60,11 @@ config_schema:
   - ['dash.ssl_key', 's', '', {title: 'Private key corresponding to the certificate'}]
   - ['dash.ssl_ca_cert', 's', 'ca.pem', {'title': 'Verify server certificate using this CA bundle'}]
   - ['dash.send_logs', 'b', false, {'title': 'Send logs'}]
+
+  # Enable access point
+  - ['wifi.ap.enable', 'b', false, {title: 'Disable Access Point'}]
+  - ['wifi.ap.ssid', 's', 'iOLED_AP', {title: 'Access Point Name'}]
+  - ['wifi.ap.pass', 's', '', {title: 'Access Point Password'}]
 
 tags:
   - js

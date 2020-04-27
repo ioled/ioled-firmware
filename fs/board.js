@@ -7,6 +7,9 @@ let board = {
   btn1: {
     pin: Cfg.get('board.btn1.pin'),
   },
+  ap: {
+    state: Cfg.get('board.ap.state'),
+  },
   led1: {
     onhi: Cfg.get('board.led1.active_high'),
     duty: Cfg.get('board.led1.duty'),
@@ -41,6 +44,7 @@ let initBoard = function () {
   print('led1 pin:', board.led1.pin);
   print('led2 pin:', board.led2.pin);
   print('button1 pin:', board.btn1.pin);
+  print('AP state:', board.ap.state);
 
   applyBoardConfig();
 };
@@ -164,15 +168,22 @@ let setButton = function () {
     GPIO.INT_EDGE_NEG,
     5000,
     function () {
-      Cfg.set({
-        wifi: {
-          ap: {
-            enable: true,
-          },
-        },
-      });
+      Cfg.set({wifi: {ap: {enable: true}}}); // Able WiFi AP mode
+      // RPC.call(
+      //   RPC.LOCAL,
+      //   'Config.Save',
+      //   {wifi: {ap: {enable: true}}},
+      //   function (resp, err_code, err_msg, ud) {
+      //     if (err_code !== 0) {
+      //       print('Error: (' + JSON.stringify(err_code) + ') ' + err_msg);
+      //     } else {
+      //       print('Result: ' + JSON.stringify(resp));
+      //     }
+      //   },
+      //   null,
+      // );
       print('Rebooting ...');
-      Sys.reboot(2000);
+      Sys.reboot(0);
     },
     null,
   );
