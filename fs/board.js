@@ -46,6 +46,9 @@ let initBoard = function () {
   print('button1 pin:', board.btn1.pin);
   print('AP state:', board.ap.state);
 
+  Cfg.set({wifi: {ap: {enable: false}}}); // Able WiFi AP mode
+  Cfg.set({board: {ap: {state: false}}});
+
   applyBoardConfig();
 };
 
@@ -169,21 +172,7 @@ let setButton = function () {
     5000,
     function () {
       Cfg.set({wifi: {ap: {enable: true}}}); // Able WiFi AP mode
-      // RPC.call(
-      //   RPC.LOCAL,
-      //   'Config.Save',
-      //   {wifi: {ap: {enable: true}}},
-      //   function (resp, err_code, err_msg, ud) {
-      //     if (err_code !== 0) {
-      //       print('Error: (' + JSON.stringify(err_code) + ') ' + err_msg);
-      //     } else {
-      //       print('Result: ' + JSON.stringify(resp));
-      //     }
-      //   },
-      //   null,
-      // );
-      print('Rebooting ...');
-      Sys.reboot(0);
+      Cfg.set({board: {ap: {state: true}}}); // Able WiFi AP mode
     },
     null,
   );

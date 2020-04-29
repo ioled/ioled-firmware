@@ -25,29 +25,42 @@ let pixel = 0;
  * @see https://github.com/mongoose-os-libs/mjs/blob/master/fs/api_events.js
  */
 
-let netSearch = function() {
-  timerId = Timer.set(
-    500,
-    Timer.REPEAT,
-    function() {
-      let online = MQTT.isConnected();
-      //print(online);
+let netSearch = function () {
+  if (board.ap.state === false) {
+    timerId = Timer.set(
+      500,
+      Timer.REPEAT,
+      function () {
+        let online = MQTT.isConnected();
+        //print(online);
 
-      if (online === false) {
+        if (online === false) {
+          GPIO.set_mode(2, GPIO.MODE_OUTPUT);
+          GPIO.toggle(2);
+
+          pixel = (pixel + 1) % numPixels;
+          setOnePixel(pixel, orange);
+        } else {
+          GPIO.set_mode(2, GPIO.MODE_OUTPUT);
+          GPIO.write(2, 0);
+
+          setAllPixels(green);
+        }
+      },
+      null,
+    );
+  }
+  if (board.ap.state === true) {
+    timerId = Timer.set(
+      200,
+      Timer.REPEAT,
+      function () {
         GPIO.set_mode(2, GPIO.MODE_OUTPUT);
         GPIO.toggle(2);
-
-        pixel = (pixel + 1) % numPixels;
-        setOnePixel(pixel, orange);
-      } else {
-        GPIO.set_mode(2, GPIO.MODE_OUTPUT);
-        GPIO.write(2, 0);
-
-        setAllPixels(green);
-      }
-    },
-    null,
-  );
+      },
+      null,
+    );
+  }
 };
 
 /**
@@ -55,7 +68,7 @@ let netSearch = function() {
  * @param {number} index The pixel index.
  * @param {{r: number, g: number, b: number}} color RGB color object.
  */
-let setOnePixel = function(index, color) {
+let setOnePixel = function (index, color) {
   strip.clear();
   strip.setPixel(index, color.r, color.g, color.b);
   strip.show();
@@ -65,7 +78,7 @@ let setOnePixel = function(index, color) {
  * Paint all pixels on the strip.
  * @param {{r: number, g: number, b: number}} color RGB color object.
  */
-let setAllPixels = function(color) {
+let setAllPixels = function (color) {
   strip.clear();
   for (let i = 0; i < numPixels; i++) {
     strip.setPixel(i, color.r, color.g, color.b);
