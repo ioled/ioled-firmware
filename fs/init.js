@@ -13,18 +13,17 @@ load('sensors.js');
 load('neopixel.js');
 load('tempo.js');
 load('mqtt.js');
+load('ramp.js');
 
-// Initialize all led stored config and timer
+// Initialize all led stored config, timer and ramp
 initBoard();
 setButton();
-// initTimer();
 
 // Neopixel Network search.
 netSearch();
 
 // Connect to the mqtt topic.
 connectMqtt();
-commandsMqtt();
 
 // Public temp and hum
 publishState();

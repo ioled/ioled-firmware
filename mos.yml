@@ -1,7 +1,7 @@
 arch: esp8266
 mos author: Cristian Valdivia
 description: iOLED Firmware
-version: 1.2.0
+version: 1.3.2
 manifest_version: 2018-05-18
 libs_version: ${mos.version}
 modules_version: ${mos.version}
@@ -15,14 +15,14 @@ config_schema:
   - ['board.ap.state', 'b', false, {title: 'AP state'}]
 
   # led1 config
-  - ['board.led1.active_high', 'b', true, {title: 'True if LED is on when output is high (1)'}]
+  - ['board.led1.active_high', 'b', false, {title: 'True if LED is on when output is high (1)'}]
   - ['board.led1.duty', 'd', 1.0, {title: 'Integrated Led duty cycle'}]
   - ['board.led1.freq', 'i', 100, {title: 'Integrated Led frequency'}]
   - ['board.led1.pin', 14]
   - ['board.led1.state', 'b', true, {title: 'Integrated Led current state'}]
 
   # led2 config
-  - ['board.led2.active_high', 'b', true, {title: 'True if LED is on when output is high (1)'}]
+  - ['board.led2.active_high', 'b', false, {title: 'True if LED is on when output is high (1)'}]
   - ['board.led2.duty', 'd', 1.0, {title: 'Integrated Led duty cycle'}]
   - ['board.led2.freq', 'i', 100, {title: 'Integrated Led frequency'}]
   - ['board.led2.pin', 'i', 12, {title: 'Led pin for PWM'}]
@@ -31,19 +31,20 @@ config_schema:
   # Neopixel config
   - ['board.neopixel.state', 'b', true, {title: 'Led current state'}]
   - ['board.neopixel.pin', 'i', 15, {title: 'Neopixel pin'}]
-  - ['board.neopixel.pixels', 'i', 3, {title: 'Neopixel number of pixels'}]
-
-  # OTA URL
-  - ['Update', 'o', {title: 'Firmware updater'}]
-  - ['Update.timeout', 'i', 60000, {title: 'Update will be aborted if it does not finish within this time'}]
+  - ['board.neopixel.pixels', 'i', 2, {title: 'Neopixel number of pixels'}]
 
   # Timer
   - ['board.timer.timerOn', 's', '00:00', {title: 'Turn on time'}]
   - ['board.timer.timerOff', 's', '00:00', {title: 'Turn off time'}]
   - ['board.timer.timerState', 'b', false, {title: 'Timer state'}]
+  - ['board.timer.onIsNext', 'b', false, {title: 'On is next'}]
+  - ['board.timer.timerDuty', 'd', 1.0, {title: 'Save duty for timer in ON'}]
 
   # Time zone
-  - ['sys.tz_spec', 's', 'CLST3', {title: 'CHile Summer Timer'}]
+  - ['sys.tz_spec', 's', 'CLST4', {title: 'Chile Summer Timer'}]
+
+  # Ramp activate
+  - ['board.ramp.state', 'b', false, {title: 'Ramp state'}]
 
   # Enable I2C
   - ['i2c.enable', 'b', true, {title: 'Enable I2C'}]
@@ -87,22 +88,27 @@ libs:
   - origin: https://github.com/mongoose-os-libs/rpc-service-fs
   - origin: https://github.com/mongoose-os-libs/rpc-loopback
   - origin: https://github.com/mongoose-os-libs/rpc-service-i2c
+
   # ota rpc
   - origin: https://github.com/mongoose-os-libs/ota-common
   - origin: https://github.com/mongoose-os-libs/rpc-service-ota
-  - origin: https://github.com/mongoose-os-libs/http-server
-  - origin: https://github.com/mongoose-os-libs/ota-common
   - origin: https://github.com/mongoose-os-libs/ota-http-client
+
   # gcp include mqtt and ca-bundle (certificates).
   - origin: https://github.com/mongoose-os-libs/gcp
+
   # Access point for wifi
   - origin: https://github.com/mongoose-os-libs/http-server
+
   # Neopixel lib
   - origin: https://github.com/mongoose-os-libs/neopixel
+
   # CRON
   - origin: https://github.com/mongoose-os-libs/cron
+
   # I2C
   - origin: https://github.com/mongoose-os-libs/i2c
+
   # mDash
   - origin: https://github.com/mongoose-os-libs/dash
   - origin: https://github.com/mongoose-os-libs/core

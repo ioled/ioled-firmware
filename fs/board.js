@@ -28,6 +28,14 @@ let board = {
     timerOn: Cfg.get('board.timer.timerOn'),
     timerOff: Cfg.get('board.timer.timerOff'),
     timerState: Cfg.get('board.timer.timerState'),
+    onIsNext: Cfg.get('board.timer.onIsNext'),
+    timerDuty: Cfg.get('board.timer.timerDuty'),
+  },
+  neopixel: {
+    pin: Cfg.get('board.neopixel.pin'),
+  },
+  ramp: {
+    state: Cfg.get('board.ramp.state'),
   },
 };
 
@@ -35,38 +43,24 @@ let board = {
  * @description Update all led values on board start and set GPIO modes.
  */
 let initBoard = function () {
-  print('[iOLED-FIRMWARE][initBoard]');
-  print('Initializing board ...');
-
+  print('[iOLED-FIRMWARE][initBoard] Initializing board ...');
   GPIO.set_mode(board.led1.pin, GPIO.MODE_OUTPUT);
   GPIO.set_mode(board.led2.pin, GPIO.MODE_OUTPUT);
 
-  print('led1 pin:', board.led1.pin);
-  print('led2 pin:', board.led2.pin);
-  print('button1 pin:', board.btn1.pin);
-  print('AP state:', board.ap.state);
+  print('   led1 pin:', board.led1.pin);
+  print('   led2 pin:', board.led2.pin);
+  print('   button1 pin:', board.btn1.pin);
+  print('   neopixel pin:', board.neopixel.pin);
+  print('   AP state:', board.ap.state);
+  print('   ramp state:', board.ramp.state);
+  print('   duty %: ', board.led1.duty);
+  print('   duty state: ', board.led1.state);
 
   Cfg.set({wifi: {ap: {enable: false}}}); // Able WiFi AP mode
   Cfg.set({board: {ap: {state: false}}});
 
+  applyTimerConfig();
   applyBoardConfig();
-};
-
-/**
- * Change the state of the led between PWM - off
- * @param {string} ledName The led name from the board object.
- * @see https://github.com/mongoose-os-libs/pwm/blob/master/mjs_fs/api_pwm.js
- */
-let switchLed = function (ledName) {
-  print('[iOLED-FIRMWARE][switchLED]', ledName);
-
-  let led = board[ledName];
-
-  PWM.set(led.pin, led.freq, led.duty);
-  print('[iOLED-FIRMWARE][switchLED]', ledName, ':', led.duty);
-
-  print(ledName, 'state:', led.state ? 'true' : 'false');
-  print(ledName, 'intensity: ', led.duty);
 };
 
 /**
@@ -76,7 +70,7 @@ let switchLed = function (ledName) {
  * // msg : {"board": {"led1":{"freq":20, "duty": 0.5, "state": true}, "led2":{"freq":20, "duty": 0.5, "state": true}}}
  */
 let getConfigFromCloud = function (msg) {
-  print('[iOLED-FIRMWARE]][getConfigFromCloud] MSG:');
+  print('[iOLED-FIRMWARE][getConfigFromCloud] MSG:');
   print(msg);
 
   let obj = JSON.parse(msg);
@@ -85,7 +79,7 @@ let getConfigFromCloud = function (msg) {
 };
 
 /**
- * Apply the configuration to all leds.
+ * Apply the configuration to all leds if timer state is false
  * @description Load all the led configuration from the mos.yml file and apply it to the board.
  */
 let applyBoardConfig = function () {
@@ -94,6 +88,7 @@ let applyBoardConfig = function () {
       applyLedConfig(ledName);
     }
   }
+  print('');
 };
 
 /**
@@ -117,19 +112,16 @@ let applyLedConfig = function (ledName) {
  * @description Put all led duty in 0.
  * @param {string} ledName The led name from the board object.
  */
-let turnOffLed = function (ledName) {
+let turnOffLed = function () {
   for (let ledName in board) {
     if (ledName.indexOf('led') >= 0) {
       let led = board[ledName];
-      let brd = 'board.' + ledName + '.';
-      led.onhi = 1;
-      led.duty = Cfg.get(brd + 'duty');
-      led.freq = Cfg.get(brd + 'freq');
-      led.state = false;
+      led.duty = 0;
       normDuty(ledName);
-      switchLed(ledName, false);
+      switchLed(ledName);
     }
   }
+  print('');
 };
 
 /**
@@ -137,27 +129,31 @@ let turnOffLed = function (ledName) {
  * @param {string} ledName The led name from the board object.
  */
 
-GPIO.set_mode(0, GPIO.MODE_OUTPUT);
-
 let normDuty = function (ledName) {
-  print('[iOLED-FIRMWARE][normDuty]', ledName);
-
   let led = board[ledName];
   if (led.duty >= 1) {
     led.duty = 1;
-    GPIO.write(0, 1);
-    print('[iOLED-FIRMWARE][normDuty]', ledName, ':', led.duty);
     return;
   }
   if (led.duty <= 0) {
     led.duty = 0;
-    GPIO.write(0, 0);
-    print('[iOLED-FIRMWARE][normDuty]', ledName, ':', led.duty);
     return;
   }
   led.duty = led.duty;
-  GPIO.write(0, 1);
-  print('[iOLED-FIRMWARE][normDuty]', ledName, ':', led.duty);
+};
+
+/**
+ * Change the state of the led between PWM - off
+ * @param {string} ledName The led name from the board object.
+ * @see https://github.com/mongoose-os-libs/pwm/blob/master/mjs_fs/api_pwm.js
+ */
+let switchLed = function (ledName) {
+  let led = board[ledName];
+
+  PWM.set(led.pin, led.freq, led.duty);
+  print('[iOLED-FIRMWARE][switchLED]: ', ledName);
+  print('   ', ledName, 'state:', led.state ? 'true' : 'false');
+  print('   ', ledName, 'intensity: ', led.duty);
 };
 
 /**

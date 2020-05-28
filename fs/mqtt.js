@@ -12,25 +12,14 @@ let stateTopic = '/devices/' + Cfg.get('device.id') + '/state';
  * @param {string} msg config message from the cloud.
  * @see https://github.com/mongoose-os-libs/mqtt/blob/master/mjs_fs/api_mqtt.js
  */
-let connectMqtt = function() {
+let connectMqtt = function () {
   print('Connecting to Mqtt topic: ', configTopic);
-  MQTT.sub(configTopic, function(conn, topic, msg) {
-    print('Topic:', topic, 'message:', msg);
+  MQTT.sub(configTopic, function (conn, topic, msg) {
+    // print('Topic:', topic, 'message:', msg);
     let obj = getConfigFromCloud(msg);
-    applyBoardConfig();
-    // applyTimerConfig(obj);
-  });
-};
-
-let commandsMqtt = function() {
-  print('Connecting to Mqtt topic: ', commandsTopic);
-  MQTT.sub(commandsTopic, function(conn, topic, msg) {
-    let eventObj = JSON.parse(msg);
-    print(JSON.stringify(eventObj));
-
-    if (eventObj.event === 'reboot') {
-      print('Rebooting ...');
-      Sys.reboot(1);
+    if (!board.timer.timerState) {
+      applyBoardConfig();
     }
+    applyTimerConfig();
   });
 };

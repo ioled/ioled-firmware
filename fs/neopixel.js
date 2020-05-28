@@ -1,9 +1,9 @@
 load('api_neopixel.js');
 load('api_events.js');
 
-// Get the neopixel pin (13)
+// Get the neopixel pin (15)
 let pin = Cfg.get('board.neopixel.pin');
-// Get the number of pixels (3).
+// Get the number of pixels (2).
 let numPixels = Cfg.get('board.neopixel.pixels');
 // Create a and return a neoPixel strip object.
 let strip = NeoPixel.create(pin, numPixels, NeoPixel.GRB);
@@ -11,8 +11,9 @@ let strip = NeoPixel.create(pin, numPixels, NeoPixel.GRB);
 let red = {r: 250, g: 0, b: 0};
 let orange = {r: 200, g: 20, b: 10};
 let green = {r: 0, g: 250, b: 0};
-let blue = {r: 0, g: 0, b: 0};
+let blue = {r: 0, g: 0, b: 150};
 let yellow = {r: 30, g: 50, b: 60};
+let white = {r: 0, g: 0, b: 0};
 
 // Numeric timer ID
 let timerId;
@@ -22,6 +23,7 @@ let pixel = 0;
 /**
  * Network search function.
  * @description Pixel blinks on network discover. Stop blinking when connected.
+ * When esp8266 is with mode AP Pixel set in one color.
  * @see https://github.com/mongoose-os-libs/mjs/blob/master/fs/api_events.js
  */
 
@@ -32,8 +34,6 @@ let netSearch = function () {
       Timer.REPEAT,
       function () {
         let online = MQTT.isConnected();
-        //print(online);
-
         if (online === false) {
           GPIO.set_mode(2, GPIO.MODE_OUTPUT);
           GPIO.toggle(2);
@@ -57,6 +57,7 @@ let netSearch = function () {
       function () {
         GPIO.set_mode(2, GPIO.MODE_OUTPUT);
         GPIO.toggle(2);
+        setAllPixels(blue);
       },
       null,
     );
