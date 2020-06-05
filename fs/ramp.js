@@ -7,12 +7,16 @@ let timerRamp = 0;
 let realDuty = 0;
 let deltaDuty = 0;
 let dutyMax = 0;
+let i = 0;
 let startRamp = function (xTime, dutyRamp) {
-  if (board.ramp.state) {
+  board.ramp.rampState = Cfg.get('board.ramp.rampState');
+
+  if (board.ramp.rampState) {
+    i = 0;
     let h = 1;
     let n = (xTime * 60) / h;
 
-    realDuty = 0;
+    realDuty = 0.07;
     deltaDuty = dutyRamp / n;
     dutyMax = dutyRamp;
     print('[iOLED-FIRMWARE][startRamp] Initializing ramp ON ...');
@@ -24,21 +28,17 @@ let startRamp = function (xTime, dutyRamp) {
       Timer.REPEAT,
       function () {
         realDuty = realDuty + deltaDuty;
-        Cfg.set({board: {led1: {duty: realDuty}}});
-        Cfg.set({board: {led2: {duty: realDuty}}});
-        board.timer.led1 = board.timer.realDuty;
-        board.timer.led2 = board.timer.realDuty;
-
+        Cfg.set({board: {ramp: {rampDuty: realDuty}}});
         applyBoardConfig();
+        i = i + 1;
         if (realDuty >= dutyMax) {
           Timer.del(timerRamp);
         }
         applyBoardConfig();
+        print('[iOLED-FIRMWARE][startRamp] i: ', i);
         print('[iOLED-FIRMWARE][startRamp] rampDuty: ', realDuty);
       },
       null,
     );
-  } else {
-    realDuty = board.led1.duty;
   }
 };

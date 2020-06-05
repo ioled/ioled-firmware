@@ -35,7 +35,10 @@ let board = {
     pin: Cfg.get('board.neopixel.pin'),
   },
   ramp: {
-    state: Cfg.get('board.ramp.state'),
+    rampState: Cfg.get('board.ramp.rampState'),
+    onTime: Cfg.get('board.ramp.onTime'),
+    offTime: Cfg.get('board.ramp.offTime'),
+    dutyRamp: Cfg.get('board.ramp.rampDuty'),
   },
 };
 
@@ -52,7 +55,6 @@ let initBoard = function () {
   print('   button1 pin:', board.btn1.pin);
   print('   neopixel pin:', board.neopixel.pin);
   print('   AP state:', board.ap.state);
-  print('   ramp state:', board.ramp.state);
   print('   duty %: ', board.led1.duty);
   print('   duty state: ', board.led1.state);
 
@@ -100,7 +102,9 @@ let applyLedConfig = function (ledName) {
   let led = board[ledName];
   let brd = 'board.' + ledName + '.';
   led.onhi = Cfg.get(brd + 'active_high');
+
   led.duty = Cfg.get(brd + 'duty');
+
   led.freq = Cfg.get(brd + 'freq');
   led.state = Cfg.get(brd + 'state');
   normDuty(ledName);
@@ -118,7 +122,10 @@ let turnOffLed = function () {
       let led = board[ledName];
       led.duty = 0;
       normDuty(ledName);
-      switchLed(ledName);
+      PWM.set(led.pin, led.freq, led.duty);
+      print('[iOLED-FIRMWARE][turnOffLed]: ', ledName);
+      print('   ', ledName, 'state:', led.state ? 'true' : 'false');
+      print('   ', ledName, 'intensity: ', led.duty);
     }
   }
   print('');
@@ -150,10 +157,28 @@ let normDuty = function (ledName) {
 let switchLed = function (ledName) {
   let led = board[ledName];
 
-  PWM.set(led.pin, led.freq, led.duty);
-  print('[iOLED-FIRMWARE][switchLED]: ', ledName);
-  print('   ', ledName, 'state:', led.state ? 'true' : 'false');
-  print('   ', ledName, 'intensity: ', led.duty);
+  board.timer.timerState = Cfg.get('board.timer.timerState');
+  board.timer.timerDuty = Cfg.get('board.timer.timerDuty');
+
+  board.ramp.rampState = Cfg.get('board.ramp.rampState');
+  board.ramp.rampDuty = Cfg.get('board.ramp.rampDuty');
+
+  if (board.timer.timerState && board.ramp.rampState) {
+    PWM.set(led.pin, led.freq, board.ramp.rampDuty);
+    print('[iOLED-FIRMWARE][switchLED]: ', ledName);
+    print('   ', ledName, 'state:', led.state ? 'true' : 'false');
+    print('   ', ledName, 'intensity: ', board.ramp.rampDuty);
+  } else if (board.timer.timerState) {
+    PWM.set(led.pin, led.freq, board.timer.timerDuty);
+    print('[iOLED-FIRMWARE][switchLED]: ', ledName);
+    print('   ', ledName, 'state:', led.state ? 'true' : 'false');
+    print('   ', ledName, 'intensity: ', board.timer.timerDuty);
+  } else {
+    PWM.set(led.pin, led.freq, led.duty);
+    print('[iOLED-FIRMWARE][switchLED]: ', ledName);
+    print('   ', ledName, 'state:', led.state ? 'true' : 'false');
+    print('   ', ledName, 'intensity: ', led.duty);
+  }
 };
 
 /**

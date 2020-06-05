@@ -8,12 +8,13 @@ let numPixels = Cfg.get('board.neopixel.pixels');
 // Create a and return a neoPixel strip object.
 let strip = NeoPixel.create(pin, numPixels, NeoPixel.GRB);
 // RGB colors.
-let red = {r: 250, g: 0, b: 0};
-let orange = {r: 200, g: 20, b: 10};
-let green = {r: 0, g: 250, b: 0};
+let red = {r: 150, g: 0, b: 0};
+let orange = {r: 150, g: 20, b: 10};
+let green = {r: 0, g: 50, b: 0};
 let blue = {r: 0, g: 0, b: 150};
 let yellow = {r: 30, g: 50, b: 60};
-let white = {r: 0, g: 0, b: 0};
+let white = {r: 50, g: 50, b: 50};
+let purple = {r: 180, g: 0, b: 250};
 
 // Numeric timer ID
 let timerId;
@@ -33,23 +34,30 @@ let netSearch = function () {
       500,
       Timer.REPEAT,
       function () {
-        let online = MQTT.isConnected();
-        if (online === false) {
+        board.timer.timerState = Cfg.get('board.timer.timerState');
+
+        if (MQTT.isConnected() === false) {
           GPIO.set_mode(2, GPIO.MODE_OUTPUT);
           GPIO.toggle(2);
 
           pixel = (pixel + 1) % numPixels;
-          setOnePixel(pixel, orange);
-        } else {
+          setOnePixel(pixel, white);
+        } else if (MQTT.isConnected() === true && !board.timer.timerState) {
           GPIO.set_mode(2, GPIO.MODE_OUTPUT);
           GPIO.write(2, 0);
 
-          setAllPixels(green);
+          setOnePixel(1, white);
+        } else if (MQTT.isConnected() === true && board.timer.timerState) {
+          GPIO.set_mode(2, GPIO.MODE_OUTPUT);
+          GPIO.write(2, 0);
+
+          setOnePixel(1, green);
         }
       },
       null,
     );
   }
+
   if (board.ap.state === true) {
     timerId = Timer.set(
       200,
@@ -57,7 +65,7 @@ let netSearch = function () {
       function () {
         GPIO.set_mode(2, GPIO.MODE_OUTPUT);
         GPIO.toggle(2);
-        setAllPixels(blue);
+        setOnePixel(1, blue);
       },
       null,
     );

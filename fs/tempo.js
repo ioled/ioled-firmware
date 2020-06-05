@@ -26,14 +26,24 @@ function initTimer() {
   board.timer.onIsNext = Cfg.get('board.timer.onIsNext');
   board.timer.timerDuty = Cfg.get('board.timer.timerDuty');
 
+  board.ramp.rampState = Cfg.get('board.ramp.rampState');
+  board.ramp.onTime = Cfg.get('board.ramp.onTime');
+  board.ramp.offTime = Cfg.get('board.ramp.offTime');
+
+  print('   Timer state: ', board.timer.timerState);
+  print('   Timer Duty: ', board.timer.timerDuty);
   print('   Timer On: ' + timerOn);
   print('   Timer Off: ' + timerOff);
-  print('   Timer state: ', board.timer.timerState);
   print('   On is next: ', board.timer.onIsNext);
-  print('   Timer Duty: ', board.timer.timerDuty);
 
-  cronIdTimerOn = cronAdd(timerOn, cronCallbackOn, null);
-  cronIdTimerOff = cronAdd(timerOff, cronCallbackOff, null);
+  print('   Ramp state: ', board.ramp.rampState);
+  print('   ON ramp time: ', board.ramp.onTime);
+  print('   OFF ramp time: ', board.ramp.offTime);
+
+  if (board.timer.timerState) {
+    cronIdTimerOn = cronAdd(timerOn, cronCallbackOn, null);
+    cronIdTimerOff = cronAdd(timerOff, cronCallbackOff, null);
+  }
 }
 
 let state_timer = true;
@@ -83,25 +93,36 @@ let cronIdTimerOn = 0;
 let cronIdTimerOff = 0;
 
 function cronCallbackOn(arg, cron_id) {
+  board.timer.timerState = Cfg.get('board.timer.timerState');
+  print('[iOLED-FIRMWARE][cronCallbackOn] timerState: ', board.timer.timerState);
   if (board.timer.timerState) {
     print('[iOLED-FIRMWARE][cronCallbackOn] Change to ON');
     Cfg.set({board: {timer: {onIsNext: true}}});
     board.timer.onIsNext = true;
 
+    board.timer.timerDuty = Cfg.get('board.timer.timerDuty');
     Cfg.set({board: {led1: {duty: board.timer.timerDuty}}});
     Cfg.set({board: {led2: {duty: board.timer.timerDuty}}});
     board.timer.led1 = board.timer.timerDuty;
     board.timer.led2 = board.timer.timerDuty;
 
-    applyBoardConfig();
+    board.ramp.rampState = Cfg.get('board.ramp.rampState');
+    print(board.ramp.rampState);
+    if (!board.ramp.rampState) {
+      applyBoardConfig();
+    }
+
     // TODO: Rampa
-    // startRamp(1, 1);
+    board.ramp.onTime = Cfg.get('board.ramp.onTime');
+    startRamp(board.ramp.onTime, board.timer.timerDuty);
 
     print('');
   }
 }
 
 function cronCallbackOff(arg, cron_id) {
+  board.timer.timerState = Cfg.get('board.timer.timerState');
+  print('[iOLED-FIRMWARE][cronCallbackOff] timerState: ', board.timer.timerState);
   if (board.timer.timerState) {
     print('[iOLED-FIRMWARE][cronCallbackOn] Change of OFF');
     Cfg.set({board: {timer: {onIsNext: false}}});
