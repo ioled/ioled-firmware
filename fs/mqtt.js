@@ -15,8 +15,7 @@ let stateTopic = '/devices/' + Cfg.get('device.id') + '/state';
 let connectMqtt = function () {
   print('Connecting to Mqtt topic: ', configTopic);
   MQTT.sub(configTopic, function (conn, topic, msg) {
-    // print('Topic:', topic, 'message:', msg);
-    let obj = getConfigFromCloud(msg);
+    getConfigFromCloud(msg);
     board.timer.timerState = Cfg.get('board.timer.timerState');
     if (!board.timer.timerState) {
       Cfg.set({board: {timer: {onIsNext: true}}});

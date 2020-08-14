@@ -1,7 +1,7 @@
 arch: esp8266
 mos author: Cristian Valdivia
 description: iOLED Firmware
-version: 1.4.1
+version: 1.5.0
 manifest_version: 2018-05-18
 libs_version: ${mos.version}
 modules_version: ${mos.version}
@@ -17,14 +17,14 @@ config_schema:
   # led1 config
   - ['board.led1.active_high', 'b', false, {title: 'True if LED is on when output is high (1)'}]
   - ['board.led1.duty', 'd', 1.0, {title: 'Integrated Led duty cycle'}]
-  - ['board.led1.freq', 'i', 100, {title: 'Integrated Led frequency'}]
+  - ['board.led1.freq', 'i', 10000, {title: 'Integrated Led frequency'}]
   - ['board.led1.pin', 14]
   - ['board.led1.state', 'b', true, {title: 'Integrated Led current state'}]
 
   # led2 config
   - ['board.led2.active_high', 'b', false, {title: 'True if LED is on when output is high (1)'}]
   - ['board.led2.duty', 'd', 1.0, {title: 'Integrated Led duty cycle'}]
-  - ['board.led2.freq', 'i', 100, {title: 'Integrated Led frequency'}]
+  - ['board.led2.freq', 'i', 10000, {title: 'Integrated Led frequency'}]
   - ['board.led2.pin', 'i', 12, {title: 'Led pin for PWM'}]
   - ['board.led2.state', 'b', true, {title: 'Integrated Led current state'}]
 

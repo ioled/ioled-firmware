@@ -81,7 +81,7 @@ let getConfigFromCloud = function (msg) {
 };
 
 /**
- * Apply the configuration to all leds if timer state is false
+ * Apply the configuration to all leds
  * @description Load all the led configuration from the mos.yml file and apply it to the board.
  */
 let applyBoardConfig = function () {
@@ -160,15 +160,7 @@ let switchLed = function (ledName) {
   board.timer.timerState = Cfg.get('board.timer.timerState');
   board.timer.timerDuty = Cfg.get('board.timer.timerDuty');
 
-  board.ramp.rampState = Cfg.get('board.ramp.rampState');
-  board.ramp.rampDuty = Cfg.get('board.ramp.rampDuty');
-
-  if (board.timer.timerState && board.ramp.rampState) {
-    PWM.set(led.pin, led.freq, board.ramp.rampDuty);
-    print('[iOLED-FIRMWARE][switchLED]: ', ledName);
-    print('   ', ledName, 'state:', led.state ? 'true' : 'false');
-    print('   ', ledName, 'intensity: ', board.ramp.rampDuty);
-  } else if (board.timer.timerState) {
+  if (board.timer.timerState) {
     PWM.set(led.pin, led.freq, board.timer.timerDuty);
     print('[iOLED-FIRMWARE][switchLED]: ', ledName);
     print('   ', ledName, 'state:', led.state ? 'true' : 'false');

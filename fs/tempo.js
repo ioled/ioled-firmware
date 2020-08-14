@@ -112,7 +112,6 @@ function cronCallbackOn(arg, cron_id) {
       applyBoardConfig();
     }
 
-    // TODO: Rampa
     board.ramp.onTime = Cfg.get('board.ramp.onTime');
     startRamp(board.ramp.onTime, board.timer.timerDuty);
 

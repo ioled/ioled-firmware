@@ -24,7 +24,7 @@ let pixel = 0;
 /**
  * Network search function.
  * @description Pixel blinks on network discover. Stop blinking when connected.
- * When esp8266 is with mode AP Pixel set in one color.
+ * When esp8266 is with mode AP Pixel set in blue.
  * @see https://github.com/mongoose-os-libs/mjs/blob/master/fs/api_events.js
  */
 
