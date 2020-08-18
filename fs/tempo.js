@@ -3,10 +3,13 @@ load('api_string.js');
 /** Initialize timer
  * @description Update all timer values on board start.
  */
+let y = [];
+let hourOn;
+let hourOff;
+let minOn;
+let minOff;
 function initTimer() {
   print('[iOLED-FIRMWARE][initTimer] Initializing timer ...');
-  cronRemove(cronIdTimerOn);
-  cronRemove(cronIdTimerOff);
 
   let tempoOn = Cfg.get('board.timer.timerOn');
   tempoOn = JSON.stringify(tempoOn);
@@ -14,35 +17,29 @@ function initTimer() {
   let tempoOff = Cfg.get('board.timer.timerOff');
   tempoOff = JSON.stringify(tempoOff);
 
-  let hourOn = JSON.stringify(JSON.parse(tempoOn.slice(1, 3)));
-  let minOn = JSON.stringify(JSON.parse(tempoOn.slice(4, 6)));
-  let hourOff = JSON.stringify(JSON.parse(tempoOff.slice(1, 3)));
-  let minOff = JSON.stringify(JSON.parse(tempoOff.slice(4, 6)));
+  hourOn = JSON.stringify(JSON.parse(tempoOn.slice(1, 3)));
+  minOn = JSON.stringify(JSON.parse(tempoOn.slice(4, 6)));
+  hourOff = JSON.stringify(JSON.parse(tempoOff.slice(1, 3)));
+  minOff = JSON.stringify(JSON.parse(tempoOff.slice(4, 6)));
 
-  let timerOn = '0 ' + minOn + ' ' + hourOn + ' * * *';
-  let timerOff = '0 ' + minOff + ' ' + hourOff + ' * * *';
 
   board.timer.timerState = Cfg.get('board.timer.timerState');
   board.timer.onIsNext = Cfg.get('board.timer.onIsNext');
   board.timer.timerDuty = Cfg.get('board.timer.timerDuty');
 
-  board.ramp.rampState = Cfg.get('board.ramp.rampState');
-  board.ramp.onTime = Cfg.get('board.ramp.onTime');
-  board.ramp.offTime = Cfg.get('board.ramp.offTime');
-
   print('   Timer state: ', board.timer.timerState);
   print('   Timer Duty: ', board.timer.timerDuty);
-  print('   Timer On: ' + timerOn);
-  print('   Timer Off: ' + timerOff);
-  print('   On is next: ', board.timer.onIsNext);
+  print('   Timer On: ' + hourOn + ':' + minOn);
+  print('   Timer Off: ' + hourOff + ':' + minOff);
 
-  print('   Ramp state: ', board.ramp.rampState);
-  print('   ON ramp time: ', board.ramp.onTime);
-  print('   OFF ramp time: ', board.ramp.offTime);
+  let time = [];
+  for (i = 0; i < 24 ; i++){
+    time[i] = i;
+  }
 
-  if (board.timer.timerState) {
-    cronIdTimerOn = cronAdd(timerOn, cronCallbackOn, null);
-    cronIdTimerOff = cronAdd(timerOff, cronCallbackOff, null);
+  y = vectorTimer(time, hourOn, hourOff);
+  for(i = 0; i < 24; i++){
+    print(y[i]);
   }
 }
 
@@ -67,19 +64,46 @@ let applyTimerConfig = function (obj) {
   }
 };
 
+let cronId = 0;
+
 function cronCallbackTimer(arg, cron_id) {
   let now = Timer.now();
-  let timestring = Timer.fmt('%T', now);
+  let timeNow = Timer.fmt('%T', now);
+  let hourNow = formatTime('%H', now);
+  let minNow = formatTime('%M', now);
 
-  print('[iOLED-FIRMWARE][cronCallbackTimer] Time: ' + timestring);
+  print('[iOLED-FIRMWARE][cronCallbackTimer] Time: ' + timeNow);
 
-  if (board.timer.onIsNext) {
-    print('[iOLED-FIRMWARE][cronCallbackTimer] On');
-    applyBoardConfig();
+  print(y[hourNow]);
+  if (y[hourNow]) {
+    if (hourNow === hourOn) {
+      if (JSON.parse(minNow) >= JSON.parse(minOn)) {
+        print(true);
+      } else {
+        print(false);
+      }
+    } else {
+      print(true)
+    }
   } else {
-    print('[iOLED-FIRMWARE][cronCallbackTimer] Off');
-    turnOffLed();
+    if (hourNow === hourOff) {
+      if (JSON.parse(minNow) >= JSON.parse(minOff)) {
+        print(false);
+      } else {
+        print(true);
+      }
+    } else {
+      print(false)
+    }
   }
+
+  // if (board.timer.onIsNext) {
+  //   print('[iOLED-FIRMWARE][cronCallbackTimer] On');
+  //   applyBoardConfig();
+  // } else {
+  //   print('[iOLED-FIRMWARE][cronCallbackTimer] Off');
+  //   turnOffLed();
+  // }
 }
 
 /**
@@ -88,53 +112,6 @@ function cronCallbackTimer(arg, cron_id) {
  * @param {string} tempo_on_cron cron expression ON
  */
 let cronAdd = ffi('int mgos_cron_add(char*, void (*)(userdata, int) ,userdata)');
-let cronId = 0;
-let cronIdTimerOn = 0;
-let cronIdTimerOff = 0;
-
-function cronCallbackOn(arg, cron_id) {
-  board.timer.timerState = Cfg.get('board.timer.timerState');
-  print('[iOLED-FIRMWARE][cronCallbackOn] timerState: ', board.timer.timerState);
-  if (board.timer.timerState) {
-    print('[iOLED-FIRMWARE][cronCallbackOn] Change to ON');
-    Cfg.set({board: {timer: {onIsNext: true}}});
-    board.timer.onIsNext = true;
-
-    board.timer.timerDuty = Cfg.get('board.timer.timerDuty');
-    Cfg.set({board: {led1: {duty: board.timer.timerDuty}}});
-    Cfg.set({board: {led2: {duty: board.timer.timerDuty}}});
-    board.timer.led1 = board.timer.timerDuty;
-    board.timer.led2 = board.timer.timerDuty;
-
-    board.ramp.rampState = Cfg.get('board.ramp.rampState');
-    print(board.ramp.rampState);
-    if (!board.ramp.rampState) {
-      applyBoardConfig();
-    }
-
-    board.ramp.onTime = Cfg.get('board.ramp.onTime');
-    startRamp(board.ramp.onTime, board.timer.timerDuty);
-
-    print('');
-  }
-}
-
-function cronCallbackOff(arg, cron_id) {
-  board.timer.timerState = Cfg.get('board.timer.timerState');
-  print('[iOLED-FIRMWARE][cronCallbackOff] timerState: ', board.timer.timerState);
-  if (board.timer.timerState) {
-    print('[iOLED-FIRMWARE][cronCallbackOn] Change of OFF');
-    Cfg.set({board: {timer: {onIsNext: false}}});
-    board.timer.onIsNext = false;
-
-    Cfg.set({board: {led1: {duty: 0}}});
-    Cfg.set({board: {led2: {duty: 0}}});
-
-    turnOffLed();
-
-    print('');
-  }
-}
 
 /**
  * Delete cron entry with a given cron ID
@@ -144,13 +121,43 @@ let cronRemove = ffi('void mgos_cron_remove(int)');
 
 function formatTime(fmt, time) {
   if (!fmt) return 'invalid format';
-  let res = 0,
-    t = Math.round(time || Timer.now()),
-    s = '      ';
+  let res = 0, t = Math.round(time || Timer.now()), s = '      ';
   while (res === 0) {
     res = Timer._f(s, s.length, fmt, t);
     if (res === -1) return 'invalid time';
     if (res === 0) s += '     ';
   }
   return s.slice(0, res);
+}
+
+function vectorTimer(time, hourOn, hourOff){
+  print('[iOLED-FIRMWARE][vectorTimer] Build vector timer ...');
+
+  let timeOn = JSON.parse(hourOn);
+  let timeOff = JSON.parse(hourOff);
+  if (timeOff > timeOn){
+    for(i = 0; i < 24; i++){
+      y[i] = 0;
+      if (time[i] >= timeOn && time[i] < timeOff){
+        y[i] = 1;
+      }
+    }
+  }
+
+  if (timeOn > timeOff){
+    for(i = 0; i < 24; i++){
+      y[i] = 1;
+      if (time[i] >= timeOff && time[i] < timeOn){
+        y[i] = 0;
+      }
+    }
+  }
+
+  if (timeOn === timeOff){
+    for(i = 0; i < 24; i++){
+      y[i] = 0;
+    }
+  }
+
+  return y
 }
