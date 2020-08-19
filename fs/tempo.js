@@ -3,7 +3,8 @@ load('api_string.js');
 /** Initialize timer
  * @description Update all timer values on board start.
  */
-let y = [];
+let yHour = [];
+let yMin = [];
 let hourOn;
 let hourOff;
 let minOn;
@@ -32,15 +33,26 @@ function initTimer() {
   print('   Timer On: ' + hourOn + ':' + minOn);
   print('   Timer Off: ' + hourOff + ':' + minOff);
 
-  let time = [];
+  let timeHour = [];
   for (i = 0; i < 24 ; i++){
-    time[i] = i;
+    timeHour[i] = i;
   }
 
-  y = vectorTimer(time, hourOn, hourOff);
-  for(i = 0; i < 24; i++){
-    print(y[i]);
+  yHour = vectorTimerHour(timeHour, hourOn, hourOff, minOn, minOff);
+
+  for (i = 0; i < 24 ; i++){
+    print(yHour[i]);
   }
+
+  let timeMin = [];
+  if (hourOn === hourOff) {
+    for (i = 0; i < 60 ; i++){
+      timeMin[i] = i;
+    } 
+    yMin = vectorTimerMin(timeMin, minOn, minOff);
+  }
+
+  
 }
 
 let state_timer = true;
@@ -73,29 +85,50 @@ function cronCallbackTimer(arg, cron_id) {
   let minNow = formatTime('%M', now);
 
   print('[iOLED-FIRMWARE][cronCallbackTimer] Time: ' + timeNow);
+  print('[iOLED-FIRMWARE][cronCallbackTimer] Hour: ' + hourNow);
+  print('[iOLED-FIRMWARE][cronCallbackTimer] Min: ' + minNow);
 
-  print(y[hourNow]);
-  if (y[hourNow]) {
-    if (hourNow === hourOn) {
-      if (JSON.parse(minNow) >= JSON.parse(minOn)) {
-        print(true);
+
+  if (hourOn !== hourOff) {
+    if (yHour[JSON.parse(hourNow)]) {
+      if (JSON.parse(hourNow) === JSON.parse(hourOn)) {
+        if (JSON.parse(minNow) >= JSON.parse(minOn)) {
+          print(true);
+        } else {
+          print(false);
+        }
       } else {
-        print(false);
+        print(true)
       }
     } else {
-      print(true)
-    }
-  } else {
-    if (hourNow === hourOff) {
-      if (JSON.parse(minNow) >= JSON.parse(minOff)) {
-        print(false);
+      if (hourNow === hourOff) {
+        if (JSON.parse(minNow) >= JSON.parse(minOff)) {
+          print(false);
+        } else {
+          print(true);
+        }
       } else {
-        print(true);
+        print(false)
       }
-    } else {
-      print(false)
     }
   }
+
+  if (JSON.parse(hourOn) === JSON.parse(hourOff)){
+    if (yHour[JSON.parse(hourNow)]) {
+      if (JSON.parse(hourNow) === JSON.parse(hourOn)) {
+        print(yMin[JSON.parse(minNow)]);
+      } else {
+        print(true)
+      }
+    } else {
+      if (JSON.parse(hourNow) === JSON.parse(hourOff)) {
+        print(yMin[JSON.parse(minNow)]);
+      } else {
+        print(false)
+      }
+    }
+  }
+  
 
   // if (board.timer.onIsNext) {
   //   print('[iOLED-FIRMWARE][cronCallbackTimer] On');
@@ -130,34 +163,77 @@ function formatTime(fmt, time) {
   return s.slice(0, res);
 }
 
-function vectorTimer(time, hourOn, hourOff){
-  print('[iOLED-FIRMWARE][vectorTimer] Build vector timer ...');
+function vectorTimerHour(time, hourOn, hourOff, minOn, minOff){
+  print('[iOLED-FIRMWARE][vectorTimerHour] Build Hour vector timer ...');
 
-  let timeOn = JSON.parse(hourOn);
-  let timeOff = JSON.parse(hourOff);
-  if (timeOff > timeOn){
+  let hourOn = JSON.parse(hourOn);
+  let hourOff = JSON.parse(hourOff);
+  let minOn = JSON.parse(minOn);
+  let minOff = JSON.parse(minOff);
+
+  if (hourOff > hourOn){
     for(i = 0; i < 24; i++){
-      y[i] = 0;
-      if (time[i] >= timeOn && time[i] < timeOff){
-        y[i] = 1;
+      yHour[i] = 0;
+      if (time[i] >= hourOn && time[i] < hourOff){
+        yHour[i] = 1;
       }
     }
   }
 
-  if (timeOn > timeOff){
+  if (hourOn > hourOff){
     for(i = 0; i < 24; i++){
-      y[i] = 1;
-      if (time[i] >= timeOff && time[i] < timeOn){
-        y[i] = 0;
+      yHour[i] = 1;
+      if (time[i] >= hourOff && time[i] < hourOn){
+        yHour[i] = 0;
       }
     }
   }
 
-  if (timeOn === timeOff){
-    for(i = 0; i < 24; i++){
-      y[i] = 0;
+  if (hourOn === hourOff){
+    if (minOn > minOff){
+      for(i = 0; i < 24; i++){
+        yHour[i] = 1;
+      }
+      yHour[hourOn] = 0;
+    }
+
+    if (minOff > minOn){
+      for(i = 0; i < 24; i++){
+        yHour[i] = 0;
+      }
+      yHour[hourOn] = 1;
+    }
+    
+  }
+
+  return yHour
+}
+
+
+
+function vectorTimerMin(time, minOn, minOff){
+  print('[iOLED-FIRMWARE][vectorTimerHour] Build Minute vector timer ...');
+
+  let minOn = JSON.parse(minOn);
+  let minOff = JSON.parse(minOff);
+
+  if (minOff > minOn){
+    for(i = 0; i < 60; i++){
+      yMin[i] = 0;
+      if (time[i] >= minOn && time[i] < minOff){
+        yMin[i] = 1;
+      }
     }
   }
 
-  return y
+  if (minOn > minOff){
+    for(i = 0; i < 60; i++){
+      yMin[i] = 1;
+      if (time[i] >= minOff && time[i] < minOn){
+        yMin[i] = 0;
+      }
+    }
+  }
+
+  return yMin
 }
