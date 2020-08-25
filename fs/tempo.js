@@ -93,22 +93,28 @@ function cronCallbackTimer(arg, cron_id) {
     if (yHour[JSON.parse(hourNow)]) {
       if (JSON.parse(hourNow) === JSON.parse(hourOn)) {
         if (JSON.parse(minNow) >= JSON.parse(minOn)) {
-          print(true);
+          print('On')
+          applyBoardConfig();
         } else {
-          print(false);
+          print('Off');
+          turnOffLed();
         }
       } else {
-        print(true)
+        print('On')
+        applyBoardConfig();
       }
     } else {
       if (hourNow === hourOff) {
         if (JSON.parse(minNow) >= JSON.parse(minOff)) {
-          print(false);
+          print('Off');
+          turnOffLed();
         } else {
-          print(true);
+          print('On')
+          applyBoardConfig();
         }
       } else {
-        print(false)
+        print('Off');
+        turnOffLed();
       }
     }
   }
@@ -118,13 +124,15 @@ function cronCallbackTimer(arg, cron_id) {
       if (JSON.parse(hourNow) === JSON.parse(hourOn)) {
         print(yMin[JSON.parse(minNow)]);
       } else {
-        print(true)
+        print('On')
+        applyBoardConfig();
       }
     } else {
       if (JSON.parse(hourNow) === JSON.parse(hourOff)) {
         print(yMin[JSON.parse(minNow)]);
       } else {
-        print(false)
+        print('Off');
+        turnOffLed();
       }
     }
   }
