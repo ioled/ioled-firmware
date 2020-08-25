@@ -6,6 +6,7 @@ load('api_pwm.js');
 load('api_mqtt.js');
 load('api_sys.js');
 load('api_rpc.js');
+load('api_ds3231.js');
 
 // Modules.
 load('board.js');
@@ -14,6 +15,7 @@ load('neopixel.js');
 load('tempo.js');
 load('mqtt.js');
 load('ramp.js');
+load('ds3231.js')
 
 // Initialize all led stored config, timer and ramp
 initBoard();

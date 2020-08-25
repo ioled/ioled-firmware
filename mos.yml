@@ -117,3 +117,7 @@ libs:
   - origin: https://github.com/mongoose-os-libs/core
   - origin: https://github.com/mongoose-os-libs/rpc-ws
   - origin: https://github.com/mongoose-os-libs/shadow
+
+  # DS3231
+  - origin: https://github.com/mongoose-os-libs/arduino-ds3231
+
