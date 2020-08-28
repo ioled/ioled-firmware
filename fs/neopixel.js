@@ -16,62 +16,6 @@ let yellow = {r: 30, g: 50, b: 60};
 let white = {r: 50, g: 50, b: 50};
 let purple = {r: 180, g: 0, b: 250};
 
-// Numeric timer ID
-let timerId;
-// The pixel index.
-let pixel = 0;
-
-/**
- * Network search function.
- * @description Pixel blinks on network discover. Stop blinking when connected.
- * When esp8266 is with mode AP Pixel set in blue.
- * @see https://github.com/mongoose-os-libs/mjs/blob/master/fs/api_events.js
- */
-
-let netSearch = function () {
-  if (board.ap.state === false) {
-    timerId = Timer.set(
-      500,
-      Timer.REPEAT,
-      function () {
-        board.timer.timerState = Cfg.get('board.timer.timerState');
-
-        if (MQTT.isConnected() === false) {
-          GPIO.set_mode(2, GPIO.MODE_OUTPUT);
-          GPIO.toggle(2);
-
-          pixel = (pixel + 1) % numPixels;
-          setOnePixel(pixel, white);
-        } else if (MQTT.isConnected() === true && !board.timer.timerState) {
-          GPIO.set_mode(2, GPIO.MODE_OUTPUT);
-          GPIO.write(2, 0);
-
-          setOnePixel(1, white);
-        } else if (MQTT.isConnected() === true && board.timer.timerState) {
-          GPIO.set_mode(2, GPIO.MODE_OUTPUT);
-          GPIO.write(2, 0);
-
-          setOnePixel(1, green);
-        }
-      },
-      null,
-    );
-  }
-
-  if (board.ap.state === true) {
-    timerId = Timer.set(
-      200,
-      Timer.REPEAT,
-      function () {
-        GPIO.set_mode(2, GPIO.MODE_OUTPUT);
-        GPIO.toggle(2);
-        setOnePixel(1, blue);
-      },
-      null,
-    );
-  }
-};
-
 /**
  *  Paint only one pixel of the strip.
  * @param {number} index The pixel index.

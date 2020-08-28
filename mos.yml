@@ -1,7 +1,7 @@
-arch: esp8266
+arch: esp32
 mos author: Cristian Valdivia
 description: iOLED Firmware
-version: 1.5.0
+version: 1.6.0
 manifest_version: 2018-05-18
 libs_version: ${mos.version}
 modules_version: ${mos.version}
@@ -53,8 +53,8 @@ config_schema:
   - ['i2c.enable', 'b', true, {title: 'Enable I2C'}]
   - ['i2c.freq', 'i', 100000, {title: 'I2C bus speed'}]
   - ['i2c.unit_no', 'i', 0, {title: 'Which hardware unit ot use, 0 or 1'}]
-  - ['i2c.sda_gpio', 'i', 5, {title: 'GPIO to use for SDA'}]
-  - ['i2c.scl_gpio', 'i', 4, {title: 'GPIO to use for SCL'}]
+  - ['i2c.sda_gpio', 'i', 21, {title: 'GPIO to use for SDA'}]
+  - ['i2c.scl_gpio', 'i', 22, {title: 'GPIO to use for SCL'}]
 
   # Config for mDash
   - ['dash.enable', 'b', false, {'title': 'Enable'}]

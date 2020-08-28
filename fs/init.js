@@ -12,6 +12,7 @@ load('api_ds3231.js');
 load('board.js');
 load('sensors.js');
 load('neopixel.js');
+load('wifi.js');
 load('tempo.js');
 load('mqtt.js');
 load('ramp.js');

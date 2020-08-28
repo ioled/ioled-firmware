@@ -79,18 +79,15 @@ let applyTimerConfig = function (obj) {
 let cronId = 0;
 
 function cronCallbackTimer(arg, cron_id) {
-  let now = Timer.now();
-  let timeNow = Timer.fmt('%T', now);
-  let hourNow = formatTime('%H', now);
-  let minNow = formatTime('%M', now);
+  let hourNow = rtc.getTimeHours();
+  let minNow = rtc.getTimeMinutes();
 
-  print('[iOLED-FIRMWARE][cronCallbackTimer] Time: ' + timeNow);
-  print('[iOLED-FIRMWARE][cronCallbackTimer] Hour: ' + hourNow);
-  print('[iOLED-FIRMWARE][cronCallbackTimer] Min: ' + minNow);
+  print('[cronCallbackTimer] Hour: ' + JSON.stringify(hourNow));
+  print('[cronCallbackTimer] Min: ' + JSON.stringify(minNow));
 
 
   if (hourOn !== hourOff) {
-    if (yHour[JSON.parse(hourNow)]) {
+    if (yHour[hourNow]) {
       if (JSON.parse(hourNow) === JSON.parse(hourOn)) {
         if (JSON.parse(minNow) >= JSON.parse(minOn)) {
           print('On')
@@ -119,32 +116,24 @@ function cronCallbackTimer(arg, cron_id) {
     }
   }
 
-  if (JSON.parse(hourOn) === JSON.parse(hourOff)){
-    if (yHour[JSON.parse(hourNow)]) {
-      if (JSON.parse(hourNow) === JSON.parse(hourOn)) {
-        print(yMin[JSON.parse(minNow)]);
-      } else {
-        print('On')
-        applyBoardConfig();
-      }
-    } else {
-      if (JSON.parse(hourNow) === JSON.parse(hourOff)) {
-        print(yMin[JSON.parse(minNow)]);
-      } else {
-        print('Off');
-        turnOffLed();
-      }
-    }
-  }
-  
-
-  // if (board.timer.onIsNext) {
-  //   print('[iOLED-FIRMWARE][cronCallbackTimer] On');
-  //   applyBoardConfig();
-  // } else {
-  //   print('[iOLED-FIRMWARE][cronCallbackTimer] Off');
-  //   turnOffLed();
+  // if (JSON.parse(hourOn) === JSON.parse(hourOff)){
+  //   if (yHour[JSON.parse(hourNow)]) {
+  //     if (JSON.parse(hourNow) === JSON.parse(hourOn)) {
+  //       print(yMin[JSON.parse(minNow)]);
+  //     } else {
+  //       print('On')
+  //       applyBoardConfig();
+  //     }
+  //   } else {
+  //     if (JSON.parse(hourNow) === JSON.parse(hourOff)) {
+  //       print(yMin[JSON.parse(minNow)]);
+  //     } else {
+  //       print('Off');
+  //       turnOffLed();
+  //     }
+  //   }
   // }
+  
 }
 
 /**
