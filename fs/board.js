@@ -154,6 +154,8 @@ let normDuty = function (ledName) {
  * @param {string} ledName The led name from the board object.
  * @see https://github.com/mongoose-os-libs/pwm/blob/master/mjs_fs/api_pwm.js
  */
+let f = ffi('int DAC_function(int, int)');
+
 let switchLed = function (ledName) {
   let led = board[ledName];
 
@@ -167,6 +169,8 @@ let switchLed = function (ledName) {
     print('   ', ledName, 'intensity: ', board.timer.timerDuty);
   } else {
     PWM.set(led.pin, led.freq, led.duty);
+    let numberToDac = Math.round(led.duty * 255);
+    print('Calling DAC_function:', f(numberToDac, 0));
     print('[iOLED-FIRMWARE][switchLED]: ', ledName);
     print('   ', ledName, 'state:', led.state ? 'true' : 'false');
     print('   ', ledName, 'intensity: ', led.duty);

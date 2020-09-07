@@ -25,14 +25,14 @@ let netSearch = function () {
           setOnePixel(pixel, white);
         } else if (MQTT.isConnected() === true ) {
 
-          // let now = Timer.now();
-          // let hourNow = formatTime('%H', now);
-          // let minNow = formatTime('%M', now);
-          // let secNow = formatTime('%S', now);
+          let now = Timer.now();
+          let hourNow = formatTime('%H', now);
+          let minNow = formatTime('%M', now);
+          let secNow = formatTime('%S', now);
 
-          // // print('[iOLED-FIRMWARE][netSearch] Time: ' + timeNow);
-          // // print('[iOLED-FIRMWARE][netSearch] Update time in DS3231');
-          // setRtcTime(JSON.parse(hourNow), JSON.parse(minNow), JSON.parse(secNow));
+          // print('[iOLED-FIRMWARE][netSearch] Time: ' + timeNow);
+          // print('[iOLED-FIRMWARE][netSearch] Update time in DS3231');
+          setRtcTime(JSON.parse(hourNow), JSON.parse(minNow), JSON.parse(secNow));
           
           if (!board.timer.timerState) {
             GPIO.set_mode(2, GPIO.MODE_OUTPUT);

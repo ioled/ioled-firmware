@@ -1,11 +1,14 @@
 arch: esp32
 mos author: Cristian Valdivia
 description: iOLED Firmware
-version: 1.6.0
-manifest_version: 2018-05-18
+version: 2.0.0
+manifest_version: 2017-09-29
 libs_version: ${mos.version}
 modules_version: ${mos.version}
 mongoose_os_version: ${mos.version}
+
+sources:
+  - src
 
 config_schema:
   # Button control
@@ -53,8 +56,8 @@ config_schema:
   - ['i2c.enable', 'b', true, {title: 'Enable I2C'}]
   - ['i2c.freq', 'i', 100000, {title: 'I2C bus speed'}]
   - ['i2c.unit_no', 'i', 0, {title: 'Which hardware unit ot use, 0 or 1'}]
-  - ['i2c.sda_gpio', 'i', 21, {title: 'GPIO to use for SDA'}]
-  - ['i2c.scl_gpio', 'i', 22, {title: 'GPIO to use for SCL'}]
+  - ['i2c.sda_gpio', 'i', 32, {title: 'GPIO to use for SDA'}]
+  - ['i2c.scl_gpio', 'i', 33, {title: 'GPIO to use for SCL'}]
 
   # Config for mDash
   - ['dash.enable', 'b', false, {'title': 'Enable'}]
@@ -70,9 +73,6 @@ config_schema:
   - ['wifi.ap.ssid', 's', 'iOLED_AP', {title: 'Access Point Name'}]
   - ['wifi.ap.pass', 's', '', {title: 'Access Point Password'}]
 
-tags:
-  - js
-
 filesystem:
   - fs
 
@@ -83,6 +83,7 @@ filesystem:
 libs:
   # boards include wifi lib.
   - origin: https://github.com/mongoose-os-libs/boards
+  - origin: https://github.com/mongoose-os-libs/ca-bundle
   - origin: https://github.com/mongoose-os-libs/mjs
   - origin: https://github.com/mongoose-os-libs/pwm
   - origin: https://github.com/mongoose-os-libs/rpc-uart
@@ -120,4 +121,8 @@ libs:
 
   # DS3231
   - origin: https://github.com/mongoose-os-libs/arduino-ds3231
+
+
+
+
 

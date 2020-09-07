@@ -15,8 +15,7 @@ load('neopixel.js');
 load('wifi.js');
 load('tempo.js');
 load('mqtt.js');
-load('ramp.js');
-load('ds3231.js')
+load('ds3231.js');
 
 // Initialize all led stored config, timer and ramp
 initBoard();
@@ -29,4 +28,6 @@ netSearch();
 connectMqtt();
 
 // Public temp and hum
-publishState();
+// publishState();
+
+

@@ -34,19 +34,19 @@ function initTimer() {
   print('   Timer Off: ' + hourOff + ':' + minOff);
 
   let timeHour = [];
-  for (i = 0; i < 24 ; i++){
+  for (let i = 0; i < 24 ; i++){
     timeHour[i] = i;
   }
 
   yHour = vectorTimerHour(timeHour, hourOn, hourOff, minOn, minOff);
 
-  for (i = 0; i < 24 ; i++){
+  for (let i = 0; i < 24 ; i++){
     print(yHour[i]);
   }
 
   let timeMin = [];
   if (hourOn === hourOff) {
-    for (i = 0; i < 60 ; i++){
+    for (let i = 0; i < 60 ; i++){
       timeMin[i] = i;
     } 
     yMin = vectorTimerMin(timeMin, minOn, minOff);
@@ -178,7 +178,7 @@ function vectorTimerHour(time, hourOn, hourOff, minOn, minOff){
   }
 
   if (hourOn > hourOff){
-    for(i = 0; i < 24; i++){
+    for(let i = 0; i < 24; i++){
       yHour[i] = 1;
       if (time[i] >= hourOff && time[i] < hourOn){
         yHour[i] = 0;
@@ -188,14 +188,14 @@ function vectorTimerHour(time, hourOn, hourOff, minOn, minOff){
 
   if (hourOn === hourOff){
     if (minOn > minOff){
-      for(i = 0; i < 24; i++){
+      for(let i = 0; i < 24; i++){
         yHour[i] = 1;
       }
       yHour[hourOn] = 0;
     }
 
     if (minOff > minOn){
-      for(i = 0; i < 24; i++){
+      for(let i = 0; i < 24; i++){
         yHour[i] = 0;
       }
       yHour[hourOn] = 1;
