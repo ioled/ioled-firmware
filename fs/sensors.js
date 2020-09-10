@@ -1,6 +1,4 @@
-// load('api_i2c.js');
-
-// // Time between each state in seconds
+// Time between each state in seconds
 // let time = 5;
 
 // let i2c = I2C.get();

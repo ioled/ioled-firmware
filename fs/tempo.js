@@ -10,7 +10,7 @@ let hourOff;
 let minOn;
 let minOff;
 function initTimer() {
-  print('[iOLED-FIRMWARE][initTimer] Initializing timer ...');
+  print('[initTimer] Initializing timer ...');
 
   let tempoOn = Cfg.get('board.timer.timerOn');
   tempoOn = JSON.stringify(tempoOn);
@@ -161,7 +161,7 @@ function formatTime(fmt, time) {
 }
 
 function vectorTimerHour(time, hourOn, hourOff, minOn, minOff){
-  print('[iOLED-FIRMWARE][vectorTimerHour] Build Hour vector timer ...');
+  print('[vectorTimerHour] Build Hour vector timer ...');
 
   let hourOn = JSON.parse(hourOn);
   let hourOff = JSON.parse(hourOff);

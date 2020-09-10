@@ -19,9 +19,9 @@ let startRamp = function (xTime, dutyRamp) {
     realDuty = 0.07;
     deltaDuty = dutyRamp / n;
     dutyMax = dutyRamp;
-    print('[iOLED-FIRMWARE][startRamp] Initializing ramp ON ...');
-    print('[iOLED-FIRMWARE][startRamp] n: ', n);
-    print('[iOLED-FIRMWARE][startRamp] deltaDuty: ', deltaDuty);
+    print('[startRamp] Initializing ramp ON ...');
+    print('[startRamp] n: ', n);
+    print('[startRamp] deltaDuty: ', deltaDuty);
 
     timerRamp = Timer.set(
       h * 1000,

@@ -46,7 +46,7 @@ let board = {
  * @description Update all led values on board start and set GPIO modes.
  */
 let initBoard = function () {
-  print('[iOLED-FIRMWARE][initBoard] Initializing board ...');
+  print('[initBoard] Initializing board ...');
   GPIO.set_mode(board.led1.pin, GPIO.MODE_OUTPUT);
   GPIO.set_mode(board.led2.pin, GPIO.MODE_OUTPUT);
 
@@ -72,9 +72,8 @@ let initBoard = function () {
  * // msg : {"board": {"led1":{"freq":20, "duty": 0.5, "state": true}, "led2":{"freq":20, "duty": 0.5, "state": true}}}
  */
 let getConfigFromCloud = function (msg) {
-  print('[iOLED-FIRMWARE][getConfigFromCloud] MSG:');
+  print('[getConfigFromCloud] MSG:');
   print(msg);
-
   let obj = JSON.parse(msg);
   Cfg.set(obj);
   return obj;
@@ -123,7 +122,7 @@ let turnOffLed = function () {
       led.duty = 0;
       normDuty(ledName);
       PWM.set(led.pin, led.freq, led.duty);
-      print('[iOLED-FIRMWARE][turnOffLed]: ', ledName);
+      print('[turnOffLed]: ', ledName);
       print('   ', ledName, 'state:', led.state ? 'true' : 'false');
       print('   ', ledName, 'intensity: ', led.duty);
     }
@@ -154,8 +153,6 @@ let normDuty = function (ledName) {
  * @param {string} ledName The led name from the board object.
  * @see https://github.com/mongoose-os-libs/pwm/blob/master/mjs_fs/api_pwm.js
  */
-let f = ffi('int DAC_function(int, int)');
-
 let switchLed = function (ledName) {
   let led = board[ledName];
 
@@ -164,14 +161,13 @@ let switchLed = function (ledName) {
 
   if (board.timer.timerState) {
     PWM.set(led.pin, led.freq, board.timer.timerDuty);
-    print('[iOLED-FIRMWARE][switchLED]: ', ledName);
+    print('[switchLED]: ', ledName);
     print('   ', ledName, 'state:', led.state ? 'true' : 'false');
     print('   ', ledName, 'intensity: ', board.timer.timerDuty);
   } else {
     PWM.set(led.pin, led.freq, led.duty);
-    let numberToDac = Math.round(led.duty * 255);
-    print('Calling DAC_function:', f(numberToDac, 0));
-    print('[iOLED-FIRMWARE][switchLED]: ', ledName);
+    dutyToAnalog(led.duty);
+    print('[switchLED]: ', ledName);
     print('   ', ledName, 'state:', led.state ? 'true' : 'false');
     print('   ', ledName, 'intensity: ', led.duty);
   }
