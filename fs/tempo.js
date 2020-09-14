@@ -50,9 +50,7 @@ function initTimer() {
       timeMin[i] = i;
     } 
     yMin = vectorTimerMin(timeMin, minOn, minOff);
-  }
-
-  
+  } 
 }
 
 let state_timer = true;
@@ -68,10 +66,11 @@ let applyTimerConfig = function (obj) {
   Cfg.set({board: {timer: {timerDuty: board.led1.timerDuty}}});
   board.timer.timerDuty = board.led1.duty;
 
-  initTimer();
-  let timer = '*/5 * * * * *';
   cronRemove(cronId);
+
   if (board.timer.timerState) {
+    let timer = '*/5 * * * * *';
+      initTimer();
     cronId = cronAdd(timer, cronCallbackTimer, null);
   }
 };
