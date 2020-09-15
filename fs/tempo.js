@@ -40,10 +40,6 @@ function initTimer() {
 
   yHour = vectorTimerHour(timeHour, hourOn, hourOff, minOn, minOff);
 
-  // for (let i = 0; i < 24 ; i++){
-  //   print(yHour[i]);
-  // }
-
   let timeMin = [];
   if (hourOn === hourOff) {
     for (let i = 0; i < 60 ; i++){
@@ -70,7 +66,7 @@ let applyTimerConfig = function (obj) {
 
   if (board.timer.timerState) {
     let timer = '*/5 * * * * *';
-      initTimer();
+    initTimer();
     cronId = cronAdd(timer, cronCallbackTimer, null);
   }
 };
@@ -83,7 +79,6 @@ function cronCallbackTimer(arg, cron_id) {
 
   print('[cronCallbackTimer] Hour: ' + JSON.stringify(hourNow));
   print('[cronCallbackTimer] Min: ' + JSON.stringify(minNow));
-
 
   if (hourOn !== hourOff) {
     if (yHour[hourNow]) {
@@ -115,23 +110,29 @@ function cronCallbackTimer(arg, cron_id) {
     }
   }
 
-  // if (JSON.parse(hourOn) === JSON.parse(hourOff)){
-  //   if (yHour[JSON.parse(hourNow)]) {
-  //     if (JSON.parse(hourNow) === JSON.parse(hourOn)) {
-  //       print(yMin[JSON.parse(minNow)]);
-  //     } else {
-  //       print('On')
-  //       applyBoardConfig();
-  //     }
-  //   } else {
-  //     if (JSON.parse(hourNow) === JSON.parse(hourOff)) {
-  //       print(yMin[JSON.parse(minNow)]);
-  //     } else {
-  //       print('Off');
-  //       turnOffLed();
-  //     }
-  //   }
-  // }
+  if (JSON.parse(hourOn) === JSON.parse(hourOff)){
+    if (yHour[hourNow]) {
+      if (hourNow === JSON.parse(hourOn)) {
+        if(yMin[minNow]) {
+          applyBoardConfig();
+        } else {
+          turnOffLed();
+        }
+      } else {
+        applyBoardConfig();
+      }
+    } else {
+      if (hourNow === JSON.parse(hourOff)) {
+        if(yMin[minNow]) {
+          applyBoardConfig();
+        } else {
+          turnOffLed();
+        }
+      } else {
+        turnOffLed();
+      }
+    }
+  }
   
 }
 
@@ -214,7 +215,7 @@ function vectorTimerMin(time, minOn, minOff){
   let minOff = JSON.parse(minOff);
 
   if (minOff > minOn){
-    for(i = 0; i < 60; i++){
+    for(let i = 0; i < 60; i++){
       yMin[i] = 0;
       if (time[i] >= minOn && time[i] < minOff){
         yMin[i] = 1;
@@ -223,7 +224,7 @@ function vectorTimerMin(time, minOn, minOff){
   }
 
   if (minOn > minOff){
-    for(i = 0; i < 60; i++){
+    for(let i = 0; i < 60; i++){
       yMin[i] = 1;
       if (time[i] >= minOff && time[i] < minOn){
         yMin[i] = 0;

@@ -128,7 +128,7 @@ conds:
         - ['i2c.sda_gpio', 'i', 32, {title: 'GPIO to use for SDA'}]
         - ['i2c.scl_gpio', 'i', 33, {title: 'GPIO to use for SCL'}]
 
-- when: mos.platform == "esp8266"
+  - when: mos.platform == "esp8266"
     apply:
       config_schema:
         - ['i2c.sda_gpio', 'i', 5, {title: 'GPIO to use for SDA'}]

@@ -30,6 +30,6 @@ netSearch();
 connectMqtt();
 
 // Public temp and hum
-// publishState();
+publishState();
 
 
