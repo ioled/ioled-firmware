@@ -1,11 +1,12 @@
-arch: esp32
-mos author: Cristian Valdivia
+mos author: Cristian Valdivia <info@ioled.cl>
 description: iOLED Firmware
 version: 2.0.0
 manifest_version: 2017-09-29
 libs_version: ${mos.version}
 modules_version: ${mos.version}
 mongoose_os_version: ${mos.version}
+
+platforms: [ esp32, esp8266 ]
 
 config_schema:
   # Button control
@@ -14,17 +15,24 @@ config_schema:
   # AP activate
   - ['board.ap.state', 'b', false, {title: 'AP state'}]
 
+  # led0 config 
+  - ['board.led0.active_high', 'b', false, {title: 'True if LED is on when output is high (1)'}]
+  - ['board.led0.duty', 'd', 1.0, {title: 'Integrated LED duty'}]
+  - ['board.led0.freq', 'i', 10000, {title: 'Integrated Led frequency'}]
+  - ['board.led0.pin', i, 2, {title: 'Led pin for PWM'}]
+  - ['board.led0.state', 'b', true, {title: 'Integrated Led current state'}]
+
   # led1 config
   - ['board.led1.active_high', 'b', false, {title: 'True if LED is on when output is high (1)'}]
-  - ['board.led1.duty', 'd', 1.0, {title: 'Integrated Led duty cycle'}]
-  - ['board.led1.freq', 'i', 10000, {title: 'Integrated Led frequency'}]
+  - ['board.led1.duty', 'd', 1.0, {title: 'Signal 1 LED duty cycle'}]
+  - ['board.led1.freq', 'i', 10000, {title: 'LED frequency'}]
   - ['board.led1.pin', 14]
   - ['board.led1.state', 'b', true, {title: 'Integrated Led current state'}]
 
   # led2 config
   - ['board.led2.active_high', 'b', false, {title: 'True if LED is on when output is high (1)'}]
-  - ['board.led2.duty', 'd', 1.0, {title: 'Integrated Led duty cycle'}]
-  - ['board.led2.freq', 'i', 10000, {title: 'Integrated Led frequency'}]
+  - ['board.led2.duty', 'd', 1.0, {title: 'Signal 2 LED duty cycle'}]
+  - ['board.led2.freq', 'i', 10000, {title: 'LED frequency'}]
   - ['board.led2.pin', 'i', 12, {title: 'Led pin for PWM'}]
   - ['board.led2.state', 'b', true, {title: 'Integrated Led current state'}]
 
@@ -53,8 +61,6 @@ config_schema:
   - ['i2c.enable', 'b', true, {title: 'Enable I2C'}]
   - ['i2c.freq', 'i', 100000, {title: 'I2C bus speed'}]
   - ['i2c.unit_no', 'i', 0, {title: 'Which hardware unit ot use, 0 or 1'}]
-  - ['i2c.sda_gpio', 'i', 32, {title: 'GPIO to use for SDA'}]
-  - ['i2c.scl_gpio', 'i', 33, {title: 'GPIO to use for SCL'}]
 
   # Config for mDash
   - ['dash.enable', 'b', false, {'title': 'Enable'}]
@@ -72,11 +78,7 @@ config_schema:
 
 filesystem:
   - fs
-
-# ffi_symbols:
-#   - mgos_cron_remove
-
-# - origin: https://github.com/mongoose-os-libs/<lib>
+  
 libs:
   # boards include wifi lib.
   - origin: https://github.com/mongoose-os-libs/boards
@@ -119,7 +121,15 @@ libs:
   # DS3231
   - origin: https://github.com/mongoose-os-libs/arduino-ds3231
 
+conds:
+  - when: mos.platform == "esp32"
+    apply:
+      config_schema:
+        - ['i2c.sda_gpio', 'i', 32, {title: 'GPIO to use for SDA'}]
+        - ['i2c.scl_gpio', 'i', 33, {title: 'GPIO to use for SCL'}]
 
-
-
-
+- when: mos.platform == "esp8266"
+    apply:
+      config_schema:
+        - ['i2c.sda_gpio', 'i', 5, {title: 'GPIO to use for SDA'}]
+        - ['i2c.scl_gpio', 'i', 4, {title: 'GPIO to use for SCL'}]

@@ -9,6 +9,8 @@ let pixel = 0;
  * When esp8266 is with mode AP Pixel set in blue.
  */
 
+let integratedLED = Cfg.get('board.led0.pin');
+
 let netSearch = function () {
   if (board.ap.state === false) {
     timerId = Timer.set(
@@ -18,8 +20,8 @@ let netSearch = function () {
         board.timer.timerState = Cfg.get('board.timer.timerState');
 
         if (MQTT.isConnected() === false) {
-          GPIO.set_mode(2, GPIO.MODE_OUTPUT);
-          GPIO.toggle(2);
+          GPIO.set_mode(integratedLED, GPIO.MODE_OUTPUT);
+          GPIO.toggle(integratedLED);
 
           pixel = (pixel + 1) % numPixels;
           setOnePixel(pixel, white);
@@ -35,11 +37,11 @@ let netSearch = function () {
           setRtcTime(JSON.parse(hourNow), JSON.parse(minNow), JSON.parse(secNow));
           
           if (!board.timer.timerState) {
-            GPIO.set_mode(2, GPIO.MODE_OUTPUT);
-            GPIO.write(2, 0);
+            GPIO.set_mode(integratedLED, GPIO.MODE_OUTPUT);
+            GPIO.write(integratedLED, 1);
           } else {
-            GPIO.set_mode(2, GPIO.MODE_OUTPUT);
-            GPIO.write(2, 0);
+            GPIO.set_mode(integratedLED, GPIO.MODE_OUTPUT);
+            GPIO.write(integratedLED, 1);
             setOnePixel(1, green);
           }
         } 
@@ -53,8 +55,8 @@ let netSearch = function () {
       200,
       Timer.REPEAT,
       function () {
-        GPIO.set_mode(2, GPIO.MODE_OUTPUT);
-        GPIO.toggle(2);
+        GPIO.set_mode(integratedLED, GPIO.MODE_OUTPUT);
+        GPIO.toggle(integratedLED);
         setOnePixel(1, blue);
       },
       null,

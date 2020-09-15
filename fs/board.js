@@ -107,7 +107,7 @@ let applyLedConfig = function (ledName) {
   led.freq = Cfg.get(brd + 'freq');
   led.state = Cfg.get(brd + 'state');
   normDuty(ledName);
-  switchLed(ledName);
+  changeLED(ledName);
 };
 
 /**
@@ -122,6 +122,7 @@ let turnOffLed = function () {
       led.duty = 0;
       normDuty(ledName);
       PWM.set(led.pin, led.freq, led.duty);
+      dutyToAnalog(led.duty);
       print('[turnOffLed]: ', ledName);
       print('   ', ledName, 'state:', led.state ? 'true' : 'false');
       print('   ', ledName, 'intensity: ', led.duty);
@@ -153,7 +154,7 @@ let normDuty = function (ledName) {
  * @param {string} ledName The led name from the board object.
  * @see https://github.com/mongoose-os-libs/pwm/blob/master/mjs_fs/api_pwm.js
  */
-let switchLed = function (ledName) {
+let changeLED = function (ledName) {
   let led = board[ledName];
 
   board.timer.timerState = Cfg.get('board.timer.timerState');
@@ -161,13 +162,14 @@ let switchLed = function (ledName) {
 
   if (board.timer.timerState) {
     PWM.set(led.pin, led.freq, board.timer.timerDuty);
-    print('[switchLED]: ', ledName);
+    dutyToAnalog(board.timer.timerDuty);
+    print('[changeLED]: ', ledName);
     print('   ', ledName, 'state:', led.state ? 'true' : 'false');
     print('   ', ledName, 'intensity: ', board.timer.timerDuty);
   } else {
     PWM.set(led.pin, led.freq, led.duty);
     dutyToAnalog(led.duty);
-    print('[switchLED]: ', ledName);
+    print('[changeLED]: ', ledName);
     print('   ', ledName, 'state:', led.state ? 'true' : 'false');
     print('   ', ledName, 'intensity: ', led.duty);
   }

@@ -40,9 +40,9 @@ function initTimer() {
 
   yHour = vectorTimerHour(timeHour, hourOn, hourOff, minOn, minOff);
 
-  for (let i = 0; i < 24 ; i++){
-    print(yHour[i]);
-  }
+  // for (let i = 0; i < 24 ; i++){
+  //   print(yHour[i]);
+  // }
 
   let timeMin = [];
   if (hourOn === hourOff) {
@@ -87,8 +87,8 @@ function cronCallbackTimer(arg, cron_id) {
 
   if (hourOn !== hourOff) {
     if (yHour[hourNow]) {
-      if (JSON.parse(hourNow) === JSON.parse(hourOn)) {
-        if (JSON.parse(minNow) >= JSON.parse(minOn)) {
+      if (hourNow === JSON.parse(hourOn)) {
+        if (minNow >= JSON.parse(minOn)) {
           print('On')
           applyBoardConfig();
         } else {
@@ -100,8 +100,8 @@ function cronCallbackTimer(arg, cron_id) {
         applyBoardConfig();
       }
     } else {
-      if (hourNow === hourOff) {
-        if (JSON.parse(minNow) >= JSON.parse(minOff)) {
+      if (hourNow === JSON.parse(hourOff)) {
+        if (minNow >= JSON.parse(minOff)) {
           print('Off');
           turnOffLed();
         } else {
@@ -168,7 +168,7 @@ function vectorTimerHour(time, hourOn, hourOff, minOn, minOff){
   let minOff = JSON.parse(minOff);
 
   if (hourOff > hourOn){
-    for(i = 0; i < 24; i++){
+    for(let i = 0; i < 24; i++){
       yHour[i] = 0;
       if (time[i] >= hourOn && time[i] < hourOff){
         yHour[i] = 1;
