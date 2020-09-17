@@ -42,6 +42,7 @@ let board = {
   },
 };
 
+
 /** Initialize board.
  * @description Update all led values on board start and set GPIO modes.
  */
@@ -49,6 +50,8 @@ let initBoard = function () {
   print('[initBoard] Initializing board ...');
   GPIO.set_mode(board.led1.pin, GPIO.MODE_OUTPUT);
   GPIO.set_mode(board.led2.pin, GPIO.MODE_OUTPUT);
+  GPIO.set_mode(4, GPIO.MODE_OUTPUT);
+
 
   print('   led1 pin:', board.led1.pin);
   print('   led2 pin:', board.led2.pin);
@@ -135,7 +138,6 @@ let turnOffLed = function () {
  * Normalize the value of the duty cycle between 0 - 1.
  * @param {string} ledName The led name from the board object.
  */
-
 let normDuty = function (ledName) {
   let led = board[ledName];
   if (led.duty >= 1) {
@@ -164,10 +166,14 @@ let changeLED = function (ledName) {
     PWM.set(led.pin, led.freq, board.timer.timerDuty);
     dutyToAnalog(board.timer.timerDuty);
     print('[changeLED]: ', ledName);
+    print('GPIO en 1')
+    GPIO.write(4, 1);
     print('   ', ledName, 'state:', led.state ? 'true' : 'false');
     print('   ', ledName, 'intensity: ', board.timer.timerDuty);
   } else {
     PWM.set(led.pin, led.freq, led.duty);
+    print('GPIO en 0')
+    GPIO.write(4, 0);
     dutyToAnalog(led.duty);
     print('[changeLED]: ', ledName);
     print('   ', ledName, 'state:', led.state ? 'true' : 'false');

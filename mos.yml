@@ -36,6 +36,10 @@ config_schema:
   - ['board.led2.pin', 'i', 12, {title: 'Led pin for PWM'}]
   - ['board.led2.state', 'b', true, {title: 'Integrated Led current state'}]
 
+    # GPIO I
+  - ['board.gpio1.pin', 'i', 4, {title: 'Pin for GPIO 1'}]
+  - ['board.gpio1.state', 'b', true, {title: 'GPIO I state'}]
+
   # Neopixel config
   - ['board.neopixel.state', 'b', true, {title: 'Led current state'}]
   - ['board.neopixel.pin', 'i', 15, {title: 'Neopixel pin'}]

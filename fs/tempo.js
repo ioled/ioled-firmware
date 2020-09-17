@@ -1,6 +1,7 @@
 load('api_string.js');
 
 /** Initialize timer
+ * FIXME: Fix function
  * @description Update all timer values on board start.
  */
 let yHour = [];
@@ -73,6 +74,7 @@ let applyTimerConfig = function (obj) {
 
 let cronId = 0;
 
+// FIXME: Change to timer or continue with cron?
 function cronCallbackTimer(arg, cron_id) {
   let hourNow = rtc.getTimeHours();
   let minNow = rtc.getTimeMinutes();
@@ -160,6 +162,7 @@ function formatTime(fmt, time) {
   return s.slice(0, res);
 }
 
+// TODO: Comment function vectorTimerHour
 function vectorTimerHour(time, hourOn, hourOff, minOn, minOff){
   print('[vectorTimerHour] Build Hour vector timer ...');
 
@@ -207,7 +210,7 @@ function vectorTimerHour(time, hourOn, hourOff, minOn, minOff){
 }
 
 
-
+// TODO: Comment function vectorTimerMin
 function vectorTimerMin(time, minOn, minOff){
   print('[iOLED-FIRMWARE][vectorTimerHour] Build Minute vector timer ...');
 

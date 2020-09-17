@@ -5,12 +5,11 @@ let pixel = 0;
 
 /**
  * Network search function.
- * @description Pixel blinks on network discover. Stop blinking when connected.
+ * @description Pixel blinks on network discover. Stop blinking when connected. 
+ * When the connection is true, set the internal timer with the time of the Zone.
  * When esp8266 is with mode AP Pixel set in blue.
  */
-
 let integratedLED = Cfg.get('board.led0.pin');
-
 let netSearch = function () {
   if (board.ap.state === false) {
     timerId = Timer.set(

@@ -7,6 +7,7 @@ let stateTopic = '/devices/' + Cfg.get('device.id') + '/state';
 
 /**
  * Subscribe to a MQTT topic and receive config data from IoT Core.
+ * FIXME: I think it´s probably improve this function
  * @configTopic (str): mqtt topic to subscribe.
  * @param {string } topic Mqtt topic.
  * @param {string} msg config message from the cloud.

@@ -1,9 +1,17 @@
 // Time between each state in seconds
 let time = 60;
 
+// Initialize SHT20
 let i2c = I2C.get();
+
+// Addres for SHT20
 let addr = 64; //0x40 - 1000000
 
+/**
+ * Send state to Google Cloud
+ * @description Send state to Google Cloud IoT Core
+ * TODO: Do measure of sensor every second and send to cloud in 1 minute. Add real filter
+ */
 let publishState = function () {
   Timer.set(
     time * 1000,
@@ -28,6 +36,12 @@ let publishState = function () {
   );
 };
 
+/**
+ * Filter for temperature meause
+ * @description Filter the temperature reading
+ * TODO: Add filter like kalman or digital filter
+ * @param {int} temp The led name from the board object.
+ */
 let tempFilter = function(temp) {
   let tempFilter;
   
@@ -41,6 +55,12 @@ let tempFilter = function(temp) {
   return tempFilter;
 };
 
+/**
+ * Filter for humidity meause
+ * @description Filter the humidity reading
+ * TODO: Add filter like kalman or digital filter
+ * @param {int} temp The led name from the board object.
+ */
 let humFilter = function(hum) {
   let humFilter;
 
