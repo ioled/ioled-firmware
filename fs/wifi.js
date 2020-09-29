@@ -7,7 +7,7 @@ let pixel = 0;
  * Network search function.
  * @description Pixel blinks on network discover. Stop blinking when connected. 
  * When the connection is true, set the internal timer with the time of the Zone.
- * When esp8266 is with mode AP Pixel set in blue.
+ * When esp8266/esp32 is with mode AP Pixel set in blue.
  */
 let integratedLED = Cfg.get('board.led0.pin');
 let netSearch = function () {
@@ -36,6 +36,7 @@ let netSearch = function () {
           if (!board.timer.timerState) {
             GPIO.set_mode(integratedLED, GPIO.MODE_OUTPUT);
             GPIO.write(integratedLED, 1);
+            setOnePixel(1, white);
           } else {
             GPIO.set_mode(integratedLED, GPIO.MODE_OUTPUT);
             GPIO.write(integratedLED, 1);

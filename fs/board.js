@@ -24,6 +24,22 @@ let board = {
     pin: Cfg.get('board.led2.pin'),
     state: Cfg.get('board.led2.state'),
   },
+  gpio1: {
+    pin: Cfg.get('board.gpio1.pin'),
+    state: Cfg.get('board.gpio1.state'),
+  },
+  gpio2: {
+    pin: Cfg.get('board.gpio2.pin'),
+    state: Cfg.get('board.gpio2.state'),
+  },
+  gpio3: {
+    pin: Cfg.get('board.gpio3.pin'),
+    state: Cfg.get('board.gpio3.state'),
+  },
+  gpio4: {
+    pin: Cfg.get('board.gpio4.pin'),
+    state: Cfg.get('board.gpio4.state'),
+  },
   timer: {
     timerOn: Cfg.get('board.timer.timerOn'),
     timerOff: Cfg.get('board.timer.timerOff'),
@@ -50,12 +66,18 @@ let initBoard = function () {
   print('[initBoard] Initializing board ...');
   GPIO.set_mode(board.led1.pin, GPIO.MODE_OUTPUT);
   GPIO.set_mode(board.led2.pin, GPIO.MODE_OUTPUT);
-  GPIO.set_mode(4, GPIO.MODE_OUTPUT);
-
+  GPIO.set_mode(board.gpio1.pin, GPIO.MODE_OUTPUT);
+  GPIO.set_mode(board.gpio2.pin, GPIO.MODE_OUTPUT);
+  GPIO.set_mode(board.gpio3.pin, GPIO.MODE_OUTPUT);
+  GPIO.set_mode(board.gpio4.pin, GPIO.MODE_OUTPUT);
 
   print('   led1 pin:', board.led1.pin);
   print('   led2 pin:', board.led2.pin);
   print('   button1 pin:', board.btn1.pin);
+  print('   gpio1 pin:', board.gpio1.pin);
+  print('   gpio2 pin:', board.gpio2.pin);
+  print('   gpio3 pin:', board.gpio3.pin);
+  print('   gpio4 pin:', board.gpio4.pin);
   print('   neopixel pin:', board.neopixel.pin);
   print('   AP state:', board.ap.state);
   print('   duty %: ', board.led1.duty);
@@ -92,6 +114,13 @@ let applyBoardConfig = function () {
       applyLedConfig(ledName);
     }
   }
+
+  for (let gpioNumber in board) {
+    if (gpioNumber.indexOf('gpio') >= 0) {
+      applyGpioConfig(gpioNumber);
+    }
+  }
+
   print('');
 };
 
@@ -166,14 +195,10 @@ let changeLED = function (ledName) {
     PWM.set(led.pin, led.freq, board.timer.timerDuty);
     dutyToAnalog(board.timer.timerDuty);
     print('[changeLED]: ', ledName);
-    print('GPIO en 1')
-    GPIO.write(4, 1);
     print('   ', ledName, 'state:', led.state ? 'true' : 'false');
     print('   ', ledName, 'intensity: ', board.timer.timerDuty);
   } else {
     PWM.set(led.pin, led.freq, led.duty);
-    print('GPIO en 0')
-    GPIO.write(4, 0);
     dutyToAnalog(led.duty);
     print('[changeLED]: ', ledName);
     print('   ', ledName, 'state:', led.state ? 'true' : 'false');
@@ -197,4 +222,22 @@ let setButton = function () {
     },
     null,
   );
+};
+
+/**
+ * Apply a single gpio configuration.
+ * @description Load a single gpio configuration from the board.
+ * @param {string} gpioNumber The number of gpio from the board object.
+ */
+let applyGpioConfig = function (gpioNumber) {
+  let gpio = board[gpioNumber];
+  let brd = 'board.' + gpioNumber + '.';
+
+  gpio.pin = Cfg.get(brd + 'pin');
+  gpio.state = Cfg.get(brd + 'state');
+
+  GPIO.write(gpio.pin, !gpio.state);
+  print('[applyGpioCOnfig]: ', gpioNumber);
+  print('   ', gpioNumber, 'state:', gpio.state ? 'true' : 'false');
+  print('');
 };

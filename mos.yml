@@ -1,6 +1,6 @@
 mos author: Cristian Valdivia <info@ioled.cl>
 description: iOLED Firmware
-version: 2.0.0
+version: 3.0.0
 manifest_version: 2017-09-29
 libs_version: ${mos.version}
 modules_version: ${mos.version}
@@ -36,9 +36,21 @@ config_schema:
   - ['board.led2.pin', 'i', 12, {title: 'Led pin for PWM'}]
   - ['board.led2.state', 'b', true, {title: 'Integrated Led current state'}]
 
-    # GPIO I
+    # GPIO I: Ligth (600 W MAX)
   - ['board.gpio1.pin', 'i', 4, {title: 'Pin for GPIO 1'}]
   - ['board.gpio1.state', 'b', true, {title: 'GPIO I state'}]
+
+    # GPIO II: Ventilation
+  - ['board.gpio2.pin', 'i', 5, {title: 'Pin for GPIO II'}]
+  - ['board.gpio2.state', 'b', true, {title: 'GPIO II state'}]
+
+    # GPIO III: Humidifier
+  - ['board.gpio3.pin', 'i', 16, {title: 'Pin for GPIO III'}]
+  - ['board.gpio3.state', 'b', true, {title: 'GPIO III state'}]
+
+    # GPIO IV: Intractor/Extractor
+  - ['board.gpio4.pin', 'i', 18, {title: 'Pin for GPIO IV'}]
+  - ['board.gpio4.state', 'b', true, {title: 'GPIO IV state'}]
 
   # Neopixel config
   - ['board.neopixel.state', 'b', true, {title: 'Led current state'}]
