@@ -24,11 +24,11 @@ let publishState = function () {
       let hum = -6 + (125 * Srh) / Math.pow(2, 16);
 
       print('[iOLED-FIRMWARE][publishState] Publishing state ...');
-      print('   humidity: ', humFilter(hum));
-      print('   temperature: ', tempFilter(temp));
+      print('   humidity: ', hum);
+      print('   temperature: ', temp);
       print('   duty: ', board.led1.duty);
       
-      let res = MQTT.pub(stateTopic, JSON.stringify({temp: tempFilter(temp), hum: humFilter(hum)}), 1);
+      let res = MQTT.pub(stateTopic, JSON.stringify({temp: temp, hum: hum, 1);
       print('   Published:', res ? 'yes' : 'no');
       print('');
     },
