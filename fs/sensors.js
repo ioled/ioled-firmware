@@ -28,7 +28,7 @@ let publishState = function () {
       print('   temperature: ', temp);
       print('   duty: ', board.led1.duty);
       
-      let res = MQTT.pub(stateTopic, JSON.stringify({temp: temp, hum: hum, 1);
+      let res = MQTT.pub(stateTopic, JSON.stringify({temp: temp, hum: hum}, 1));
       print('   Published:', res ? 'yes' : 'no');
       print('');
     },
