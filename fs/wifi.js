@@ -1,7 +1,12 @@
 // Numeric timer ID
 let timerId;
+
 // The pixel index.
 let pixel = 0;
+
+let integratedLED = Cfg.get('board.led0.pin');
+let integratedState = Cfg.get('board.led0.state');
+GPIO.set_mode(integratedLED, GPIO.MODE_OUTPUT);
 
 /**
  * Network search function.
@@ -9,10 +14,6 @@ let pixel = 0;
  * When the connection is true, set the internal timer with the time of the Zone.
  * When esp8266/32 is in mode AP, set NEO pixel in blue.
  */
-let integratedLED = Cfg.get('board.led0.pin');
-let integratedState = Cfg.get('board.led0.state');
-GPIO.set_mode(integratedLED, GPIO.MODE_OUTPUT);
-
 let netSearch = function () {
   if (board.ap.state === false) {
     timerId = Timer.set(

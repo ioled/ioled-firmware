@@ -1,15 +1,17 @@
 load('api_string.js');
 
-/** Initialize timer
- * FIXME: Fix function
- * @description Update all timer values on board start.
- */
+
 let yHour = [];
 let yMin = [];
 let hourOn;
 let hourOff;
 let minOn;
 let minOff;
+
+/** Initialize timer
+ * FIXME: Fix function
+ * @description Update all timer values on board start.
+ */
 function initTimer() {
   print('[initTimer] Initializing timer ...');
 
