@@ -11,6 +11,7 @@ let addr = 64; //0x40 - 1000000
  * Send state to Google Cloud
  * @description Send state to Google Cloud IoT Core
  * TODO: Do measure of sensor every second and send to cloud in 1 minute. Add real filter
+ * TODO: add online state here? 
  */
 let publishState = function () {
   Timer.set(

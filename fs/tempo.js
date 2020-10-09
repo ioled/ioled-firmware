@@ -61,13 +61,12 @@ let state_timer = true;
  */
 
 let applyTimerConfig = function (obj) {
-  board.timer.timerState = Cfg.get('board.timer.timerState');
-  Cfg.set({board: {timer: {timerDuty: board.led1.timerDuty}}});
-  board.timer.timerDuty = board.led1.duty;
+  // Cfg.set({board: {timer: {timerDuty: board.led1.timerDuty}}});
+  // board.timer.timerDuty = board.led1.duty;
 
   cronRemove(cronId);
 
-  if (board.timer.timerState) {
+  if (Cfg.get('board.timer.timerState')) {
     let timer = '*/5 * * * * *';
     initTimer();
     cronId = cronAdd(timer, cronCallbackTimer, null);
