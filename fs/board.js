@@ -51,6 +51,12 @@ let initBoard = function () {
   GPIO.set_mode(board.led1.pin, GPIO.MODE_OUTPUT);
   GPIO.set_mode(board.led2.pin, GPIO.MODE_OUTPUT);
 
+  let dayNow = rtc.getTimeDayOfTheWeek();
+  let hourNow = rtc.getTimeHours();
+  let minNow = rtc.getTimeMinutes();
+  print('   Day: ' + JSON.stringify(dayNow));
+  print('   Hour: ' + JSON.stringify(hourNow));
+  print('   Min: ' + JSON.stringify(minNow));
   print('   led1 pin:', board.led1.pin);
   print('   led2 pin:', board.led2.pin);
   print('   button1 pin:', board.btn1.pin);

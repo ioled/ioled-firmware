@@ -18,10 +18,10 @@ let connectMqtt = function () {
     getConfigFromCloud(msg);
     if (Cfg.get('board.timer.timerState')) {
       applyTimerConfig();
-      applyBoardConfig();
-      setOnePixel(1, purple);
     } else {
       applyTimerConfig();
+      applyBoardConfig();
+      setOnePixel(1, purple);
     }
   });
 };
