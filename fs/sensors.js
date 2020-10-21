@@ -28,10 +28,8 @@ let publishState = function () {
       let hourNow = rtc.getTimeHours();
       let minNow = rtc.getTimeMinutes();
 
-
-
       print('[publishState] Publishing state ...');
-      print('   Day: ' + JSON.stringify(dayNow));
+      print('   Day of week: ' + JSON.stringify(dayNow));
       print('   Hour: ' + JSON.stringify(hourNow) + ':' + JSON.stringify(minNow));
       print('   Total ram: ', Sys.total_ram() );
       print('   Free ram: ', Sys.free_ram() );

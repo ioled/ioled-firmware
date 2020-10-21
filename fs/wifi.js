@@ -13,7 +13,6 @@ GPIO.set_mode(integratedLED, GPIO.MODE_OUTPUT);
  * @description Pixel blinks on network discover. Stop blinking when connected. 
  * When the connection is true, set the internal timer with the time of the Zone.
  * When esp8266/32 is in mode AP, set NEO pixel in blue.
- * FIXME: Solve problem with LED in purple when is connected
  */
 let netSearch = function () {
   if (board.ap.state === false) {
@@ -45,6 +44,7 @@ let netSearch = function () {
           
           if (!board.timer.timerState) {
             GPIO.write(integratedLED, integratedState);
+            setOnePixel(1, white);
           } else {
             GPIO.write(integratedLED, integratedState);
             setOnePixel(1, green);

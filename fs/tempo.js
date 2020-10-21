@@ -76,26 +76,9 @@ function cronCallbackTimer(arg, cron_id) {
   let minNow = rtc.getTimeMinutes();
   let dayNow = rtc.getTimeDayOfTheWeek();
 
-
-  // let now = Timer.now();
-  // let hourNow = formatTime('%H', now);
-  // let minNow = formatTime('%M', now);
-  // let secNow = formatTime('%S', now);
-
-  // let dayNow = formatTime('%d', now);
-  // let monthNow = formatTime('%m', now);
-  // let yearNow = formatTime('%Y', now);
-
   print('[cronCallbackTimer] Hour: ' + JSON.stringify(hourNow));
   print('[cronCallbackTimer] Min: ' + JSON.stringify(minNow));
   print('[cronCallbackTimer] Day: ' + JSON.stringify(dayNow));
-
-
-
-  // print('[cronCallbackTimer] Day: ' + JSON.stringify(dayNow));
-  // print('[cronCallbackTimer] Month: ' + JSON.stringify(monthNow));
-  // print('[cronCallbackTimer] Year: ' + JSON.stringify(yearNow));
-
 
   if (hourOn !== hourOff) {
     if (yHour[hourNow]) {
@@ -177,7 +160,11 @@ function formatTime(fmt, time) {
   return s.slice(0, res);
 }
 
-// TODO: Comment function vectorTimerHour
+/**
+ * Create vectorTimerHour
+ * @description Create vector of hour for timer
+ * @param {[time]} time time, hourOn, hourOff, minOn, minOff
+ */
 function vectorTimerHour(time, hourOn, hourOff, minOn, minOff){
   print('[vectorTimerHour] Build Hour vector timer ...');
 
@@ -225,7 +212,11 @@ function vectorTimerHour(time, hourOn, hourOff, minOn, minOff){
 }
 
 
-// TODO: Comment function vectorTimerMin
+/**
+ * Create vectorTimerMin
+ * @description Create vector of minute for timer
+ * @param {[time]} time time, minOn, minOff
+ */
 function vectorTimerMin(time, minOn, minOff){
   print('[iOLED-FIRMWARE][vectorTimerHour] Build Minute vector timer ...');
 
