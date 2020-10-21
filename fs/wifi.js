@@ -35,7 +35,13 @@ let netSearch = function () {
           let minNow = formatTime('%M', now);
           let secNow = formatTime('%S', now);
 
+          let dayNow = formatTime('%d', now);
+          let monthNow = formatTime('%m', now);
+          let yearNow = formatTime('%y', now);
+          let dayOfWeekNow = formatTime('%u', now);
+
           setRtcTime(JSON.parse(hourNow), JSON.parse(minNow), JSON.parse(secNow));
+          setRtcDate(JSON.parse(dayNow), JSON.parse(monthNow), JSON.parse(yearNow), JSON.parse(dayOfWeekNow));
           
           if (!board.timer.timerState) {
             GPIO.write(integratedLED, integratedState);

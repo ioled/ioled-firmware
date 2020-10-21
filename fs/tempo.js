@@ -1,6 +1,5 @@
 load('api_string.js');
 
-
 let yHour = [];
 let yMin = [];
 let hourOn;
@@ -26,9 +25,7 @@ function initTimer() {
   hourOff = JSON.stringify(JSON.parse(tempoOff.slice(1, 3)));
   minOff = JSON.stringify(JSON.parse(tempoOff.slice(4, 6)));
 
-
   board.timer.timerState = Cfg.get('board.timer.timerState');
-  board.timer.onIsNext = Cfg.get('board.timer.onIsNext');
   board.timer.timerDuty = Cfg.get('board.timer.timerDuty');
 
   print('   Timer state: ', board.timer.timerState);
@@ -59,7 +56,6 @@ let state_timer = true;
  * @description Turn on/off cron if state_timer is true
  * @param {boolean} state_timer
  */
-
 let applyTimerConfig = function (obj) {
   // Cfg.set({board: {timer: {timerDuty: board.led1.timerDuty}}});
   // board.timer.timerDuty = board.led1.duty;
@@ -75,13 +71,31 @@ let applyTimerConfig = function (obj) {
 
 let cronId = 0;
 
-// FIXME: Change to timer or continue with cron?
 function cronCallbackTimer(arg, cron_id) {
   let hourNow = rtc.getTimeHours();
   let minNow = rtc.getTimeMinutes();
+  let dayNow = rtc.getTimeDayOfTheWeek();
+
+
+  // let now = Timer.now();
+  // let hourNow = formatTime('%H', now);
+  // let minNow = formatTime('%M', now);
+  // let secNow = formatTime('%S', now);
+
+  // let dayNow = formatTime('%d', now);
+  // let monthNow = formatTime('%m', now);
+  // let yearNow = formatTime('%Y', now);
 
   print('[cronCallbackTimer] Hour: ' + JSON.stringify(hourNow));
   print('[cronCallbackTimer] Min: ' + JSON.stringify(minNow));
+  print('[cronCallbackTimer] Day: ' + JSON.stringify(dayNow));
+
+
+
+  // print('[cronCallbackTimer] Day: ' + JSON.stringify(dayNow));
+  // print('[cronCallbackTimer] Month: ' + JSON.stringify(monthNow));
+  // print('[cronCallbackTimer] Year: ' + JSON.stringify(yearNow));
+
 
   if (hourOn !== hourOff) {
     if (yHour[hourNow]) {

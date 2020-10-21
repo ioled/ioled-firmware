@@ -13,3 +13,15 @@ let setRtcTime = function (hours, minutes, seconds) {
 	rtc.setTimeMinutes(minutes);
 	rtc.setTimeHours(hours);
 };
+
+/**
+ * Set the date en DS3231
+ * @description Set the internal date in DS3231
+ * @param {[date]} date date, month and year
+ */
+let setRtcDate = function (date, month, year, dayOfWeek) {
+	rtc.setTimeDate(date);
+	rtc.setTimeMonth(month);
+	rtc.setTimeYear(year);
+	rtc.setTimeDayOfTheWeek(dayOfWeek);
+};
