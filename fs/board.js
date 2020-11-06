@@ -67,7 +67,6 @@ let initBoard = function () {
 	Cfg.set({wifi: {ap: {enable: false}}}); // Able WiFi AP mode
 	Cfg.set({board: {ap: {state: false}}});
 
-	// applyTimerConfig();
 	applyBoardConfig();
 };
 
@@ -122,6 +121,7 @@ let applyLedConfig = function (ledName) {
  * @param {string} ledName The led name from the board object.
  */
 let turnOffLed = function () {
+	print('[turnOffLed]');
 	for (let ledName in board) {
 		if (ledName.indexOf('led') >= 0) {
 			let led = board[ledName];
@@ -129,8 +129,6 @@ let turnOffLed = function () {
 			normDuty(ledName);
 			PWM.set(led.pin, led.freq, led.duty);
 			dutyToAnalog(led.duty);
-			print('[turnOffLed]: ', ledName);
-			print('   ', ledName, 'state:', led.state ? 'true' : 'false');
 			print('   ', ledName, 'intensity: ', led.duty);
 		}
 	}
@@ -165,12 +163,10 @@ let changeLED = function (ledName) {
 	if (Cfg.get('board.timer.timerState')) {
 		PWM.set(led.pin, led.freq, led.duty);
 		dutyToAnalog(led.duty);
-		print('   ', ledName, 'state:', led.state ? 'true' : 'false');
 		print('   ', ledName, 'intensity: ', led.duty);
 	} else {
 		PWM.set(led.pin, led.freq, led.duty);
 		dutyToAnalog(led.duty);
-		print('   ', ledName, 'state:', led.state ? 'true' : 'false');
 		print('   ', ledName, 'intensity: ', led.duty);
 	}
 };

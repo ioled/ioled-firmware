@@ -6,7 +6,7 @@ libs_version: ${mos.version}
 modules_version: ${mos.version}
 mongoose_os_version: ${mos.version}
 
-platforms: [ esp32, esp8266 ]
+platforms: [esp32, esp8266]
 
 config_schema:
   # Button control
@@ -41,8 +41,6 @@ config_schema:
   - ['board.timer.timerOn', 's', '00:00', {title: 'Turn on time'}]
   - ['board.timer.timerOff', 's', '00:00', {title: 'Turn off time'}]
   - ['board.timer.timerState', 'b', false, {title: 'Timer state'}]
-  # - ['board.timer.onIsNext', 'b', false, {title: 'On is next'}]
-  - ['board.timer.timerDuty', 'd', 1.0, {title: 'Save duty for timer in ON'}]
 
   # Time zone
   - ['sys.tz_spec', 's', 'CLST3', {title: 'Chile Summer Timer'}]
@@ -68,7 +66,7 @@ config_schema:
 
 filesystem:
   - fs
-  
+
 libs:
   # boards include wifi lib.
   - origin: https://github.com/mongoose-os-libs/boards
@@ -119,11 +117,9 @@ conds:
         - ['i2c.scl_gpio', 'i', 33, {title: 'GPIO to use for SCL'}]
         - ['board.led0.state', 'b', true, {title: 'Integrated Led state'}]
 
-
   - when: mos.platform == "esp8266"
     apply:
       config_schema:
         - ['i2c.sda_gpio', 'i', 5, {title: 'GPIO to use for SDA'}]
         - ['i2c.scl_gpio', 'i', 4, {title: 'GPIO to use for SCL'}]
         - ['board.led0.state', 'b', false, {title: 'Integrated Led state'}]
-

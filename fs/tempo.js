@@ -26,11 +26,7 @@ function initTimer() {
 	hourOff = JSON.stringify(JSON.parse(tempoOff.slice(1, 3)));
 	minOff = JSON.stringify(JSON.parse(tempoOff.slice(4, 6)));
 
-	board.timer.timerState = Cfg.get('board.timer.timerState');
-	board.timer.timerDuty = Cfg.get('board.timer.timerDuty');
-
-	print('   Timer state: ', board.timer.timerState);
-	print('   Timer Duty: ', board.timer.timerDuty);
+	print('   Timer state: ', Cfg.get('board.timer.timerState'));
 	print('   Timer On: ' + hourOn + ':' + minOn);
 	print('   Timer Off: ' + hourOff + ':' + minOff);
 
@@ -72,27 +68,21 @@ function cronCallbackTimer(arg, cron_id) {
 			if (yHour[hourNow]) {
 				if (hourNow === JSON.parse(hourOn)) {
 					if (minNow >= JSON.parse(minOn)) {
-						print('On');
 						applyBoardConfig();
 					} else {
-						print('Off');
 						turnOffLed();
 					}
 				} else {
-					print('On');
 					applyBoardConfig();
 				}
 			} else {
 				if (hourNow === JSON.parse(hourOff)) {
 					if (minNow >= JSON.parse(minOff)) {
-						print('Off');
 						turnOffLed();
 					} else {
-						print('On');
 						applyBoardConfig();
 					}
 				} else {
-					print('Off');
 					turnOffLed();
 				}
 			}
@@ -124,7 +114,7 @@ function cronCallbackTimer(arg, cron_id) {
 	}
 
 	// Reset every day
-	if (hourNow >= hourReset && minNow <= 0 && secNow <= 10) {
+	if (hourNow >= hourReset && minNow <= 0 && secNow <= 6) {
 		print('[cronCallbackTimer] Daily reset ...');
 		Sys.reboot(1);
 	}
