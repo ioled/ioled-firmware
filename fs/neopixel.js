@@ -22,9 +22,9 @@ let purple = {r: 180, g: 0, b: 250};
  * @param {{r: number, g: number, b: number}} color RGB color object.
  */
 let setOnePixel = function (index, color) {
-  strip.clear();
-  strip.setPixel(index, color.r, color.g, color.b);
-  strip.show();
+	strip.clear();
+	strip.setPixel(index, color.r, color.g, color.b);
+	strip.show();
 };
 
 /**
@@ -32,9 +32,9 @@ let setOnePixel = function (index, color) {
  * @param {{r: number, g: number, b: number}} color RGB color object.
  */
 let setAllPixels = function (color) {
-  strip.clear();
-  for (let i = 0; i < numPixels; i++) {
-    strip.setPixel(i, color.r, color.g, color.b);
-  }
-  strip.show();
+	strip.clear();
+	for (let i = 0; i < numPixels; i++) {
+		strip.setPixel(i, color.r, color.g, color.b);
+	}
+	strip.show();
 };

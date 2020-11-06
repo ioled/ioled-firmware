@@ -13,15 +13,15 @@ let stateTopic = '/devices/' + Cfg.get('device.id') + '/state';
  * @see https://github.com/mongoose-os-libs/mqtt/blob/master/mjs_fs/api_mqtt.js
  */
 let connectMqtt = function () {
-  print('Connecting to Mqtt topic: ', configTopic);
-  MQTT.sub(configTopic, function (conn, topic, msg) {
-    getConfigFromCloud(msg);
-    if (Cfg.get('board.timer.timerState')) {
-      applyTimerConfig();
-    } else {
-      applyTimerConfig();
-      applyBoardConfig();
-      setOnePixel(1, purple);
-    }
-  });
+	print('Connecting to Mqtt topic: ', configTopic);
+	MQTT.sub(configTopic, function (conn, topic, msg) {
+		getConfigFromCloud(msg);
+		if (Cfg.get('board.timer.timerState')) {
+			applyTimerConfig();
+		} else {
+			applyTimerConfig();
+			applyBoardConfig();
+			setOnePixel(1, purple);
+		}
+	});
 };

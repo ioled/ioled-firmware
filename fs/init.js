@@ -31,5 +31,3 @@ connectMqtt();
 
 // Public temp and hum
 publishState();
-
-
