@@ -54,14 +54,16 @@ function initTimer() {
 }
 
 let state_timer = true;
-let hourReset = 19;
+let hourReset = 20;
 function cronCallbackTimer(arg, cron_id) {
 	let hourNow = rtc.getTimeHours();
 	let minNow = rtc.getTimeMinutes();
+	let secNow = rtc.getTimeSeconds();
 	let dayNow = rtc.getTimeDayOfTheWeek();
 
 	print('[cronCallbackTimer] Hour: ' + JSON.stringify(hourNow));
-	print('[cronCallbackTimer] Min: ' + JSON.stringify(minNow));
+	print('[cronCallbackTimer] Minute: ' + JSON.stringify(minNow));
+	print('[cronCallbackTimer] Second: ' + JSON.stringify(secNow));
 	print('[cronCallbackTimer] Day: ' + JSON.stringify(dayNow));
 	print('');
 
@@ -122,7 +124,7 @@ function cronCallbackTimer(arg, cron_id) {
 	}
 
 	// Reset every day
-	if (hourNow >= hourReset && minNow <= 0) {
+	if (hourNow >= hourReset && minNow <= 0 && secNow <= 10) {
 		print('[cronCallbackTimer] Daily reset ...');
 		Sys.reboot(1);
 	}
