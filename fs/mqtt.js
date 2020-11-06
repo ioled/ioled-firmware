@@ -17,9 +17,10 @@ let connectMqtt = function () {
 	MQTT.sub(configTopic, function (conn, topic, msg) {
 		getConfigFromCloud(msg);
 		if (Cfg.get('board.timer.timerState')) {
-			applyTimerConfig();
+			// applyTimerConfig();
+			initTimer();
 		} else {
-			applyTimerConfig();
+			// applyTimerConfig();
 			applyBoardConfig();
 			setOnePixel(1, purple);
 		}

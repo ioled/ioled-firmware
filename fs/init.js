@@ -21,6 +21,7 @@ load('mcp4725.js');
 
 // Initialize all led stored config, timer and ramp
 initBoard();
+initTimer();
 setButton();
 
 // Neopixel Network search.

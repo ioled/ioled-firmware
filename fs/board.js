@@ -67,7 +67,7 @@ let initBoard = function () {
 	Cfg.set({wifi: {ap: {enable: false}}}); // Able WiFi AP mode
 	Cfg.set({board: {ap: {state: false}}});
 
-	applyTimerConfig();
+	// applyTimerConfig();
 	applyBoardConfig();
 };
 
@@ -88,6 +88,8 @@ let getConfigFromCloud = function (msg) {
  * @description Load all the led configuration from the mos.yml file and apply it to the board.
  */
 let applyBoardConfig = function () {
+	print('[applyBoardConfig]');
+
 	for (let ledName in board) {
 		if (ledName.indexOf('led') >= 0) {
 			applyLedConfig(ledName);
@@ -160,19 +162,14 @@ let normDuty = function (ledName) {
 let changeLED = function (ledName) {
 	let led = board[ledName];
 
-	board.timer.timerState = Cfg.get('board.timer.timerState');
-	board.timer.timerDuty = Cfg.get('board.timer.timerDuty');
-
-	if (board.timer.timerState) {
-		PWM.set(led.pin, led.freq, board.timer.timerDuty);
-		dutyToAnalog(board.timer.timerDuty);
-		print('[changeLED]: ', ledName);
+	if (Cfg.get('board.timer.timerState')) {
+		PWM.set(led.pin, led.freq, led.duty);
+		dutyToAnalog(led.duty);
 		print('   ', ledName, 'state:', led.state ? 'true' : 'false');
-		print('   ', ledName, 'intensity: ', board.timer.timerDuty);
+		print('   ', ledName, 'intensity: ', led.duty);
 	} else {
 		PWM.set(led.pin, led.freq, led.duty);
 		dutyToAnalog(led.duty);
-		print('[changeLED]: ', ledName);
 		print('   ', ledName, 'state:', led.state ? 'true' : 'false');
 		print('   ', ledName, 'intensity: ', led.duty);
 	}
