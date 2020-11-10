@@ -7,9 +7,9 @@ let hourOff;
 let minOn;
 let minOff;
 let cronId = 0;
+let hourReset = 20;
 
 /** Initialize timer
- * FIXME: Fix function
  * @description Update all timer values on board start.
  */
 function initTimer() {
@@ -26,9 +26,16 @@ function initTimer() {
 	hourOff = JSON.stringify(JSON.parse(tempoOff.slice(1, 3)));
 	minOff = JSON.stringify(JSON.parse(tempoOff.slice(4, 6)));
 
+	if (JSON.parse(hourOn) < 23) {
+		hourReset = JSON.parse(hourOn) + 2;
+	} else {
+		hourReset = 0;
+	}
+
 	print('   Timer state: ', Cfg.get('board.timer.timerState'));
 	print('   Timer On: ' + hourOn + ':' + minOn);
 	print('   Timer Off: ' + hourOff + ':' + minOff);
+	print('   Reset hour: ' + JSON.stringify(hourReset));
 
 	let timeHour = [];
 	for (let i = 0; i < 24; i++) {
@@ -49,9 +56,13 @@ function initTimer() {
 	cronId = cronAdd('*/5 * * * * *', cronCallbackTimer, null);
 }
 
-let state_timer = true;
-let hourReset = 20;
-function cronCallbackTimer(arg, cron_id) {
+/**
+ * cronCallbackTimer
+ * @description Timer every 5 second. Have two actions inside:
+ * - Timer of LED
+ * - Daily reset
+ */
+function cronCallbackTimer(arg) {
 	let hourNow = rtc.getTimeHours();
 	let minNow = rtc.getTimeMinutes();
 	let secNow = rtc.getTimeSeconds();
@@ -63,7 +74,10 @@ function cronCallbackTimer(arg, cron_id) {
 	print('[cronCallbackTimer] Day: ' + JSON.stringify(dayNow));
 	print('');
 
+	// Check of hour from de
+
 	if (Cfg.get('board.timer.timerState')) {
+		// Different hour On-Off
 		if (hourOn !== hourOff) {
 			if (yHour[hourNow]) {
 				if (hourNow === JSON.parse(hourOn)) {
@@ -88,6 +102,7 @@ function cronCallbackTimer(arg, cron_id) {
 			}
 		}
 
+		// Same hour On-Off
 		if (JSON.parse(hourOn) === JSON.parse(hourOff)) {
 			if (yHour[hourNow]) {
 				if (hourNow === JSON.parse(hourOn)) {
@@ -202,7 +217,7 @@ function vectorTimerHour(time, hourOn, hourOff, minOn, minOff) {
  * @param {[time]} time time, minOn, minOff
  */
 function vectorTimerMin(time, minOn, minOff) {
-	print('[iOLED-FIRMWARE][vectorTimerHour] Build Minute vector timer ...');
+	print('[vectorTimerHour] Build Minute vector timer ...');
 
 	let minOn = JSON.parse(minOn);
 	let minOff = JSON.parse(minOff);
