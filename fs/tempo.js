@@ -62,6 +62,11 @@ function initTimer() {
  * - Timer of LED
  * - Daily reset
  */
+let hour_1 = 0;
+let hour_2 = 0;
+let hour_3 = 0;
+let hour_4 = 0;
+
 function cronCallbackTimer(arg) {
 	let hourNow = rtc.getTimeHours();
 	let minNow = rtc.getTimeMinutes();
@@ -74,57 +79,64 @@ function cronCallbackTimer(arg) {
 	print('[cronCallbackTimer] Day: ' + JSON.stringify(dayNow));
 	print('');
 
-	// Check of hour from de
-
+	// Check of hour five consecutive time
 	if (Cfg.get('board.timer.timerState')) {
-		// Different hour On-Off
-		if (hourOn !== hourOff) {
-			if (yHour[hourNow]) {
-				if (hourNow === JSON.parse(hourOn)) {
-					if (minNow >= JSON.parse(minOn)) {
-						applyBoardConfig();
-					} else {
-						turnOffLed();
-					}
-				} else {
-					applyBoardConfig();
-				}
-			} else {
-				if (hourNow === JSON.parse(hourOff)) {
-					if (minNow >= JSON.parse(minOff)) {
-						turnOffLed();
-					} else {
-						applyBoardConfig();
-					}
-				} else {
-					turnOffLed();
-				}
-			}
-		}
+		// Check of hour five consecutive time
+		if (hourNow === hour_1 && hour_1 === hour_2 && hour_2 === hour_3 && hour_3 === hour_4) {
+			print('[cronCallbackTimer] Check verification of hour');
+			print('');
 
-		// Same hour On-Off
-		if (JSON.parse(hourOn) === JSON.parse(hourOff)) {
-			if (yHour[hourNow]) {
-				if (hourNow === JSON.parse(hourOn)) {
-					if (yMin[minNow]) {
+			// Different hour On-Off
+			if (hourOn !== hourOff) {
+				if (yHour[hourNow]) {
+					if (hourNow === JSON.parse(hourOn)) {
+						if (minNow >= JSON.parse(minOn)) {
+							applyBoardConfig();
+						} else {
+							turnOffLed();
+						}
+					} else {
 						applyBoardConfig();
+					}
+				} else {
+					if (hourNow === JSON.parse(hourOff)) {
+						if (minNow >= JSON.parse(minOff)) {
+							turnOffLed();
+						} else {
+							applyBoardConfig();
+						}
 					} else {
 						turnOffLed();
 					}
-				} else {
-					applyBoardConfig();
-				}
-			} else {
-				if (hourNow === JSON.parse(hourOff)) {
-					if (yMin[minNow]) {
-						applyBoardConfig();
-					} else {
-						turnOffLed();
-					}
-				} else {
-					turnOffLed();
 				}
 			}
+
+			// Same hour On-Off
+			if (JSON.parse(hourOn) === JSON.parse(hourOff)) {
+				if (yHour[hourNow]) {
+					if (hourNow === JSON.parse(hourOn)) {
+						if (yMin[minNow]) {
+							applyBoardConfig();
+						} else {
+							turnOffLed();
+						}
+					} else {
+						applyBoardConfig();
+					}
+				} else {
+					if (hourNow === JSON.parse(hourOff)) {
+						if (yMin[minNow]) {
+							applyBoardConfig();
+						} else {
+							turnOffLed();
+						}
+					} else {
+						turnOffLed();
+					}
+				}
+			}
+		} else {
+			print('[cronCallbackTimer] Fail verification of hour');
 		}
 	}
 
@@ -133,6 +145,12 @@ function cronCallbackTimer(arg) {
 		print('[cronCallbackTimer] Daily reset ...');
 		Sys.reboot(1);
 	}
+
+	// Update values to check the correct value of hour
+	hour_4 = hour_3;
+	hour_3 = hour_2;
+	hour_2 = hour_1;
+	hour_1 = hourNow;
 }
 
 /**
