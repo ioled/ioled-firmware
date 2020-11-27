@@ -4,8 +4,8 @@ let timerId;
 // The pixel index.
 let pixel = 0;
 
-let integratedLED = Cfg.get('board.led0.pin');
-let integratedState = Cfg.get('board.led0.state');
+let integratedLED = Cfg.get('esp.led0.pin');
+let integratedState = Cfg.get('esp.led0.state');
 GPIO.set_mode(integratedLED, GPIO.MODE_OUTPUT);
 
 /**
@@ -15,12 +15,12 @@ GPIO.set_mode(integratedLED, GPIO.MODE_OUTPUT);
  * When esp8266/32 is in mode AP, set NEO pixel in blue.
  */
 let netSearch = function () {
-	if (board.ap.state === false) {
+	if (esp.ap.state === false) {
 		timerId = Timer.set(
 			500,
 			Timer.REPEAT,
 			function () {
-				board.timer.timerState = Cfg.get('board.timer.timerState');
+				esp.timer.timerState = Cfg.get('esp.timer.timerState');
 
 				if (MQTT.isConnected() === false) {
 					GPIO.toggle(integratedLED);
@@ -46,7 +46,7 @@ let netSearch = function () {
 						JSON.parse(dayOfWeekNow),
 					);
 
-					if (!board.timer.timerState) {
+					if (!esp.timer.timerState) {
 						GPIO.write(integratedLED, integratedState);
 						setOnePixel(1, white);
 					} else {
@@ -59,7 +59,7 @@ let netSearch = function () {
 		);
 	}
 
-	if (board.ap.state === true) {
+	if (esp.ap.state === true) {
 		timerId = Timer.set(
 			200,
 			Timer.REPEAT,

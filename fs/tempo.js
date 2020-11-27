@@ -10,15 +10,15 @@ let cronId = 0;
 let hourReset = 20;
 
 /** Initialize timer
- * @description Update all timer values on board start.
+ * @description Update all timer values on esp start.
  */
 function initTimer() {
 	print('[initTimer] Initializing timer ...');
 
-	let tempoOn = Cfg.get('board.timer.timerOn');
+	let tempoOn = Cfg.get('esp.timer.timerOn');
 	tempoOn = JSON.stringify(tempoOn);
 
-	let tempoOff = Cfg.get('board.timer.timerOff');
+	let tempoOff = Cfg.get('esp.timer.timerOff');
 	tempoOff = JSON.stringify(tempoOff);
 
 	hourOn = JSON.stringify(JSON.parse(tempoOn.slice(1, 3)));
@@ -32,7 +32,7 @@ function initTimer() {
 		hourReset = 0;
 	}
 
-	print('   Timer state: ', Cfg.get('board.timer.timerState'));
+	print('   Timer state: ', Cfg.get('esp.timer.timerState'));
 	print('   Timer On: ' + hourOn + ':' + minOn);
 	print('   Timer Off: ' + hourOff + ':' + minOff);
 	print('   Reset hour: ' + JSON.stringify(hourReset));
@@ -80,9 +80,15 @@ function cronCallbackTimer(arg) {
 	print('');
 
 	// Check of hour five consecutive time
-	if (Cfg.get('board.timer.timerState')) {
+	if (Cfg.get('esp.timer.timerState')) {
 		// Check of hour five consecutive time
-		if (hourNow === hour_1 && hour_1 === hour_2 && hour_2 === hour_3 && hour_3 === hour_4) {
+		if (
+			hourNow === hour_1 &&
+			hour_1 === hour_2 &&
+			hour_2 === hour_3 &&
+			hour_3 === hour_4 &&
+			hourNow < 24
+		) {
 			print('[cronCallbackTimer] Check verification of hour');
 			print('');
 
@@ -91,19 +97,19 @@ function cronCallbackTimer(arg) {
 				if (yHour[hourNow]) {
 					if (hourNow === JSON.parse(hourOn)) {
 						if (minNow >= JSON.parse(minOn)) {
-							applyBoardConfig();
+							applyEspConfig();
 						} else {
 							turnOffLed();
 						}
 					} else {
-						applyBoardConfig();
+						applyEspConfig();
 					}
 				} else {
 					if (hourNow === JSON.parse(hourOff)) {
 						if (minNow >= JSON.parse(minOff)) {
 							turnOffLed();
 						} else {
-							applyBoardConfig();
+							applyEspConfig();
 						}
 					} else {
 						turnOffLed();
@@ -116,17 +122,17 @@ function cronCallbackTimer(arg) {
 				if (yHour[hourNow]) {
 					if (hourNow === JSON.parse(hourOn)) {
 						if (yMin[minNow]) {
-							applyBoardConfig();
+							applyEspConfig();
 						} else {
 							turnOffLed();
 						}
 					} else {
-						applyBoardConfig();
+						applyEspConfig();
 					}
 				} else {
 					if (hourNow === JSON.parse(hourOff)) {
 						if (yMin[minNow]) {
-							applyBoardConfig();
+							applyEspConfig();
 						} else {
 							turnOffLed();
 						}
@@ -141,7 +147,7 @@ function cronCallbackTimer(arg) {
 	}
 
 	// Reset every day
-	if (hourNow >= hourReset && minNow <= 0 && secNow <= 6) {
+	if (hourNow === hourReset && minNow <= 0 && secNow <= 6) {
 		print('[cronCallbackTimer] Daily reset ...');
 		Sys.reboot(1);
 	}

@@ -1,6 +1,6 @@
 mos author: Cristian Valdivia <info@ioled.cl>
 description: iOLED Firmware (+Daily reset and change in initTimer)
-version: 2.0.5
+version: 2.1.0
 manifest_version: 2017-09-29
 libs_version: ${mos.version}
 modules_version: ${mos.version}
@@ -10,37 +10,37 @@ platforms: [esp32, esp8266]
 
 config_schema:
   # Button control
-  - ['board.btn1.pin', 'i', 0, {title: 'Button pin for AP'}]
+  - ['esp.btn1.pin', 'i', 0, {title: 'Button pin for AP'}]
 
   # AP activate
-  - ['board.ap.state', 'b', false, {title: 'AP state'}]
+  - ['esp.ap.state', 'b', false, {title: 'AP state'}]
 
   # Integrated led (led0)
-  - ['board.led0.pin', 'i', 2, {title: 'Integrated led'}]
+  - ['esp.led0.pin', 'i', 2, {title: 'Integrated led'}]
 
   # led1 config
-  - ['board.led1.active_high', 'b', false, {title: 'True if LED is on when output is high (1)'}]
-  - ['board.led1.duty', 'd', 1.0, {title: 'Signal 1 LED duty cycle'}]
-  - ['board.led1.freq', 'i', 10000, {title: 'LED frequency'}]
-  - ['board.led1.pin', 14]
-  - ['board.led1.state', 'b', true, {title: 'Integrated Led current state'}]
+  - ['esp.led1.active_high', 'b', false, {title: 'True if LED is on when output is high (1)'}]
+  - ['esp.led1.duty', 'd', 1.0, {title: 'Signal 1 LED duty cycle'}]
+  - ['esp.led1.freq', 'i', 10000, {title: 'LED frequency'}]
+  - ['esp.led1.pin', 'i', 14, {title: 'Led pin for PWM'}]
+  - ['esp.led1.state', 'b', true, {title: 'Integrated Led current state'}]
 
   # led2 config
-  - ['board.led2.active_high', 'b', false, {title: 'True if LED is on when output is high (1)'}]
-  - ['board.led2.duty', 'd', 1.0, {title: 'Signal 2 LED duty cycle'}]
-  - ['board.led2.freq', 'i', 10000, {title: 'LED frequency'}]
-  - ['board.led2.pin', 'i', 12, {title: 'Led pin for PWM'}]
-  - ['board.led2.state', 'b', true, {title: 'Integrated Led current state'}]
+  - ['esp.led2.active_high', 'b', false, {title: 'True if LED is on when output is high (1)'}]
+  - ['esp.led2.duty', 'd', 1.0, {title: 'Signal 2 LED duty cycle'}]
+  - ['esp.led2.freq', 'i', 10000, {title: 'LED frequency'}]
+  - ['esp.led2.pin', 'i', 12, {title: 'Led pin for PWM'}]
+  - ['esp.led2.state', 'b', true, {title: 'Integrated Led current state'}]
 
   # Neopixel config
-  - ['board.neopixel.state', 'b', true, {title: 'Led current state'}]
-  - ['board.neopixel.pin', 'i', 15, {title: 'Neopixel pin'}]
-  - ['board.neopixel.pixels', 'i', 2, {title: 'Neopixel number of pixels'}]
+  - ['esp.neopixel.state', 'b', true, {title: 'Led current state'}]
+  - ['esp.neopixel.pin', 'i', 15, {title: 'Neopixel pin'}]
+  - ['esp.neopixel.pixels', 'i', 2, {title: 'Neopixel number of pixels'}]
 
   # Timer
-  - ['board.timer.timerOn', 's', '00:00', {title: 'Turn on time'}]
-  - ['board.timer.timerOff', 's', '00:00', {title: 'Turn off time'}]
-  - ['board.timer.timerState', 'b', false, {title: 'Timer state'}]
+  - ['esp.timer.timerOn', 's', '00:00', {title: 'Turn on time'}]
+  - ['esp.timer.timerOff', 's', '00:00', {title: 'Turn off time'}]
+  - ['esp.timer.timerState', 'b', false, {title: 'Timer state'}]
 
   # Time zone
   - ['sys.tz_spec', 's', 'CLST3', {title: 'Chile Summer Timer'}]
@@ -69,7 +69,8 @@ filesystem:
 
 libs:
   # boards include wifi lib.
-  - origin: https://github.com/mongoose-os-libs/boards
+  # - origin: https://github.com/mongoose-os-libs/boards
+  - origin: https://github.com/mongoose-os-libs/wifi
   - origin: https://github.com/mongoose-os-libs/ca-bundle
   - origin: https://github.com/mongoose-os-libs/mjs
   - origin: https://github.com/mongoose-os-libs/pwm
@@ -79,11 +80,6 @@ libs:
   - origin: https://github.com/mongoose-os-libs/rpc-service-fs
   - origin: https://github.com/mongoose-os-libs/rpc-loopback
   - origin: https://github.com/mongoose-os-libs/rpc-service-i2c
-
-  # ota rpc
-  - origin: https://github.com/mongoose-os-libs/ota-common
-  - origin: https://github.com/mongoose-os-libs/rpc-service-ota
-  - origin: https://github.com/mongoose-os-libs/ota-http-client
 
   # gcp include mqtt and ca-bundle (certificates).
   - origin: https://github.com/mongoose-os-libs/gcp
@@ -102,9 +98,7 @@ libs:
 
   # mDash
   - origin: https://github.com/mongoose-os-libs/dash
-  - origin: https://github.com/mongoose-os-libs/core
-  - origin: https://github.com/mongoose-os-libs/rpc-ws
-  - origin: https://github.com/mongoose-os-libs/shadow
+  - origin: https://github.com/mongoose-os-libs/rpc-service-ota
 
   # DS3231
   - origin: https://github.com/mongoose-os-libs/arduino-ds3231
@@ -115,11 +109,11 @@ conds:
       config_schema:
         - ['i2c.sda_gpio', 'i', 32, {title: 'GPIO to use for SDA'}]
         - ['i2c.scl_gpio', 'i', 33, {title: 'GPIO to use for SCL'}]
-        - ['board.led0.state', 'b', true, {title: 'Integrated Led state'}]
+        - ['esp.led0.state', 'b', true, {title: 'Integrated Led state'}]
 
   - when: mos.platform == "esp8266"
     apply:
       config_schema:
         - ['i2c.sda_gpio', 'i', 5, {title: 'GPIO to use for SDA'}]
         - ['i2c.scl_gpio', 'i', 4, {title: 'GPIO to use for SCL'}]
-        - ['board.led0.state', 'b', false, {title: 'Integrated Led state'}]
+        - ['esp.led0.state', 'b', false, {title: 'Integrated Led state'}]

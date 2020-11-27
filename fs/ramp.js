@@ -10,9 +10,9 @@
 // let dutyMax = 0;
 // let i = 0;
 // let startRamp = function (xTime, dutyRamp) {
-//   board.ramp.rampState = Cfg.get('board.ramp.rampState');
+//   esp.ramp.rampState = Cfg.get('esp.ramp.rampState');
 
-//   if (board.ramp.rampState) {
+//   if (esp.ramp.rampState) {
 //     i = 0;
 //     let h = 1;
 //     let n = (xTime * 60) / h;
@@ -29,13 +29,13 @@
 //       Timer.REPEAT,
 //       function () {
 //         realDuty = realDuty + deltaDuty;
-//         Cfg.set({board: {ramp: {rampDuty: realDuty}}});
-//         applyBoardConfig();
+//         Cfg.set({esp: {ramp: {rampDuty: realDuty}}});
+//         applyespConfig();
 //         i = i + 1;
 //         if (realDuty >= dutyMax) {
 //           Timer.del(timerRamp);
 //         }
-//         applyBoardConfig();
+//         applyespConfig();
 //         print('[iOLED-FIRMWARE][startRamp] i: ', i);
 //         print('[iOLED-FIRMWARE][startRamp] rampDuty: ', realDuty);
 //       },

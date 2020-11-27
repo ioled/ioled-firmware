@@ -35,7 +35,7 @@ let publishState = function () {
 			print('   Free ram: ', Sys.free_ram());
 			print('   humidity: ', hum);
 			print('   temperature: ', temp);
-			print('   duty: ', board.led1.duty);
+			print('   duty: ', esp.led1.duty);
 
 			let res = MQTT.pub(stateTopic, JSON.stringify({temp: temp, hum: hum}, 1));
 			print('   Published:', res ? 'yes' : 'no');
@@ -49,7 +49,7 @@ let publishState = function () {
  * Filter for temperature meause
  * @description Filter the temperature reading
  * TODO: Add filter like kalman or digital filter
- * @param {int} temp The led name from the board object.
+ * @param {int} temp The led name from the esp object.
  */
 let tempFilter = function (temp) {
 	let tempFilter;
@@ -68,7 +68,7 @@ let tempFilter = function (temp) {
  * Filter for humidity meause
  * @description Filter the humidity reading
  * TODO: Add filter like kalman or digital filter
- * @param {int} temp The led name from the board object.
+ * @param {int} temp The led name from the esp object.
  */
 let humFilter = function (hum) {
 	let humFilter;

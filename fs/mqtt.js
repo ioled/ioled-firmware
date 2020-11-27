@@ -16,10 +16,10 @@ let connectMqtt = function () {
 	print('Connecting to Mqtt topic: ', configTopic);
 	MQTT.sub(configTopic, function (conn, topic, msg) {
 		getConfigFromCloud(msg);
-		if (Cfg.get('board.timer.timerState')) {
+		if (Cfg.get('esp.timer.timerState')) {
 			initTimer();
 		} else {
-			applyBoardConfig();
+			applyEspConfig();
 			setOnePixel(1, purple);
 		}
 	});

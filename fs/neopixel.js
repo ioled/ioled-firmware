@@ -2,9 +2,9 @@ load('api_neopixel.js');
 load('api_events.js');
 
 // Get the neopixel pin (15)
-let pin = Cfg.get('board.neopixel.pin');
+let pin = Cfg.get('esp.neopixel.pin');
 // Get the number of pixels (2).
-let numPixels = Cfg.get('board.neopixel.pixels');
+let numPixels = Cfg.get('esp.neopixel.pixels');
 // Create a and return a neoPixel strip object.
 let strip = NeoPixel.create(pin, numPixels, NeoPixel.GRB);
 // RGB colors.
