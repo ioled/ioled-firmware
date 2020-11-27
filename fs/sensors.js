@@ -24,11 +24,7 @@ let publishState = function () {
 			let Srh = I2C.readRegW(i2c, addr, 0xe5); // 1110 0101
 			let hum = -6 + (125 * Srh) / Math.pow(2, 16);
 
-			let hourNow = dt.getHour();
-			let minNow = dt.getMinute();
-
 			print('[publishState] Publishing state ...');
-			print('   Hour: ' + JSON.stringify(hourNow) + ':' + JSON.stringify(minNow));
 			print('   Total ram: ', Sys.total_ram());
 			print('   Free ram: ', Sys.free_ram());
 			print('   humidity: ', hum);

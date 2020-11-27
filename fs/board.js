@@ -59,7 +59,7 @@ let initEsp = function () {
 
 	ds.free();
 	dt.free();
-	// print('   Day: ' + JSON.stringify(dayNow));
+
 	print('   Hour: ' + JSON.stringify(hourNow));
 	print('   Min: ' + JSON.stringify(minNow));
 	print('   led1 pin:', esp.led1.pin);

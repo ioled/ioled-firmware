@@ -1,6 +1,6 @@
 mos author: Cristian Valdivia <info@ioled.cl>
-description: iOLED Firmware (+Daily reset and change in initTimer)
-version: 2.2.0
+description: iOLED Firmware (+Change in library for DS3231)
+version: 2.2.1
 manifest_version: 2017-09-29
 libs_version: ${mos.version}
 modules_version: ${mos.version}
@@ -9,6 +9,7 @@ mongoose_os_version: ${mos.version}
 platforms: [esp32, esp8266]
 
 config_schema:
+  - ['esp', 'o', {title: 'iOLED esp settings'}]
   # Button control
   - ['esp.btn1.pin', 'i', 0, {title: 'Button pin for AP'}]
 
@@ -101,7 +102,6 @@ libs:
   - origin: https://github.com/mongoose-os-libs/rpc-service-ota
 
   # DS3231
-  # - origin: https://github.com/mongoose-os-libs/arduino-ds3231
   - origin: https://github.com/mongoose-os-libs/ds3231
 
 conds:

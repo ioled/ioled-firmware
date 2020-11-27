@@ -8,10 +8,11 @@ let integratedLED = Cfg.get('esp.led0.pin');
 let integratedState = Cfg.get('esp.led0.state');
 GPIO.set_mode(integratedLED, GPIO.MODE_OUTPUT);
 
+let checkFirstConnection = true;
 /**
  * Network search function.
  * @description Pixel blinks on network discover. Stop blinking when connected.
- * When the connection is true, set the internal timer with the time of the Zone.
+ * When the connection is true, set the internal timer with the time of the zone.
  * When esp8266/32 is in mode AP, set NEO pixel in blue.
  */
 let netSearch = function () {
@@ -28,32 +29,31 @@ let netSearch = function () {
 					pixel = (pixel + 1) % numPixels;
 					setOnePixel(pixel, white);
 				} else if (MQTT.isConnected() === true) {
-					let now = Timer.now();
-					let hourNow = formatTime('%H', now);
-					let minNow = formatTime('%M', now);
-					let secNow = formatTime('%S', now);
+					if (checkFirstConnection) {
+						let now = Timer.now();
+						let hourNow = formatTime('%H', now);
+						let minNow = formatTime('%M', now);
+						let secNow = formatTime('%S', now);
 
-					let dayNow = formatTime('%d', now);
-					let monthNow = formatTime('%m', now);
-					let yearNow = formatTime('%y', now);
-					let dayOfWeekNow = formatTime('%u', now);
+						let dayNow = formatTime('%d', now);
+						let monthNow = formatTime('%m', now);
+						let yearNow = formatTime('%y', now);
 
-					let ds = DS3231.create(DS3231_I2C_addresss);
-					let dt = DS3231DateTime.create();
+						let ds = DS3231.create(DS3231_I2C_addresss);
+						let dt = DS3231DateTime.create();
 
-					dt.setDate(JSON.parse(yearNow), JSON.parse(monthNow), JSON.parse(dayNow));
-					dt.setTime(JSON.parse(hourNow), JSON.parse(minNow), JSON.parse(secNow));
+						dt.setDate(JSON.parse(yearNow), JSON.parse(monthNow), JSON.parse(dayNow));
+						dt.setTime(JSON.parse(hourNow), JSON.parse(minNow), JSON.parse(secNow));
 
-					ds.write(dt);
-					ds.free();
-					dt.free();
-					// setRtcTime(JSON.parse(hourNow), JSON.parse(minNow), JSON.parse(secNow));
-					// setRtcDate(
-					// 	JSON.parse(dayNow),
-					// 	JSON.parse(monthNow),
-					// 	JSON.parse(yearNow),
-					// 	JSON.parse(dayOfWeekNow),
-					// );
+						ds.write(dt);
+						ds.free();
+						dt.free();
+
+						checkFirstConnection = !checkFirstConnection;
+						print('');
+						print('[netSearch] Write time in DS3231');
+						print('');
+					}
 
 					if (!esp.timer.timerState) {
 						GPIO.write(integratedLED, integratedState);

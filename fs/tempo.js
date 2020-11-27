@@ -76,12 +76,10 @@ function cronCallbackTimer(arg) {
 	let secNow = rtc.getSecond();
 
 	rtc.free();
-	// let dayNow = dt.getTimeDayOfTheWeek();
 
 	print('[cronCallbackTimer] Hour: ' + JSON.stringify(hourNow));
 	print('[cronCallbackTimer] Minute: ' + JSON.stringify(minNow));
 	print('[cronCallbackTimer] Second: ' + JSON.stringify(secNow));
-	// print('[cronCallbackTimer] Day: ' + JSON.stringify(dayNow));
 	print('');
 
 	// Check of hour five consecutive time
