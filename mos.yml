@@ -1,6 +1,6 @@
 mos author: Cristian Valdivia <info@ioled.cl>
 description: iOLED Firmware (+Daily reset and change in initTimer)
-version: 2.1.0
+version: 2.2.0
 manifest_version: 2017-09-29
 libs_version: ${mos.version}
 modules_version: ${mos.version}
@@ -101,7 +101,8 @@ libs:
   - origin: https://github.com/mongoose-os-libs/rpc-service-ota
 
   # DS3231
-  - origin: https://github.com/mongoose-os-libs/arduino-ds3231
+  # - origin: https://github.com/mongoose-os-libs/arduino-ds3231
+  - origin: https://github.com/mongoose-os-libs/ds3231
 
 conds:
   - when: mos.platform == "esp32"

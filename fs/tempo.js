@@ -68,15 +68,20 @@ let hour_3 = 0;
 let hour_4 = 0;
 
 function cronCallbackTimer(arg) {
-	let hourNow = rtc.getTimeHours();
-	let minNow = rtc.getTimeMinutes();
-	let secNow = rtc.getTimeSeconds();
-	let dayNow = rtc.getTimeDayOfTheWeek();
+	let ds = DS3231.create(DS3231_I2C_addresss);
+	let rtc = ds.read();
+
+	let hourNow = rtc.getHour();
+	let minNow = rtc.getMinute();
+	let secNow = rtc.getSecond();
+
+	rtc.free();
+	// let dayNow = dt.getTimeDayOfTheWeek();
 
 	print('[cronCallbackTimer] Hour: ' + JSON.stringify(hourNow));
 	print('[cronCallbackTimer] Minute: ' + JSON.stringify(minNow));
 	print('[cronCallbackTimer] Second: ' + JSON.stringify(secNow));
-	print('[cronCallbackTimer] Day: ' + JSON.stringify(dayNow));
+	// print('[cronCallbackTimer] Day: ' + JSON.stringify(dayNow));
 	print('');
 
 	// Check of hour five consecutive time
@@ -87,7 +92,8 @@ function cronCallbackTimer(arg) {
 			hour_1 === hour_2 &&
 			hour_2 === hour_3 &&
 			hour_3 === hour_4 &&
-			hourNow < 24
+			hourNow < 24 &&
+			hourNow !== 0
 		) {
 			print('[cronCallbackTimer] Check verification of hour');
 			print('');

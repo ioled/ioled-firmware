@@ -50,10 +50,16 @@ let initEsp = function () {
 	GPIO.set_mode(esp.led1.pin, GPIO.MODE_OUTPUT);
 	GPIO.set_mode(esp.led2.pin, GPIO.MODE_OUTPUT);
 
-	let dayNow = rtc.getTimeDayOfTheWeek();
-	let hourNow = rtc.getTimeHours();
-	let minNow = rtc.getTimeMinutes();
-	print('   Day: ' + JSON.stringify(dayNow));
+	// let dayNow = rtc.getTimeDayOfTheWeek();
+	let ds = DS3231.create(DS3231_I2C_addresss);
+	let dt = DS3231DateTime.create();
+
+	let hourNow = ds.read().getHour();
+	let minNow = ds.read().getMinute();
+
+	ds.free();
+	dt.free();
+	// print('   Day: ' + JSON.stringify(dayNow));
 	print('   Hour: ' + JSON.stringify(hourNow));
 	print('   Min: ' + JSON.stringify(minNow));
 	print('   led1 pin:', esp.led1.pin);

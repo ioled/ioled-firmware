@@ -38,13 +38,22 @@ let netSearch = function () {
 					let yearNow = formatTime('%y', now);
 					let dayOfWeekNow = formatTime('%u', now);
 
-					setRtcTime(JSON.parse(hourNow), JSON.parse(minNow), JSON.parse(secNow));
-					setRtcDate(
-						JSON.parse(dayNow),
-						JSON.parse(monthNow),
-						JSON.parse(yearNow),
-						JSON.parse(dayOfWeekNow),
-					);
+					let ds = DS3231.create(DS3231_I2C_addresss);
+					let dt = DS3231DateTime.create();
+
+					dt.setDate(JSON.parse(yearNow), JSON.parse(monthNow), JSON.parse(dayNow));
+					dt.setTime(JSON.parse(hourNow), JSON.parse(minNow), JSON.parse(secNow));
+
+					ds.write(dt);
+					ds.free();
+					dt.free();
+					// setRtcTime(JSON.parse(hourNow), JSON.parse(minNow), JSON.parse(secNow));
+					// setRtcDate(
+					// 	JSON.parse(dayNow),
+					// 	JSON.parse(monthNow),
+					// 	JSON.parse(yearNow),
+					// 	JSON.parse(dayOfWeekNow),
+					// );
 
 					if (!esp.timer.timerState) {
 						GPIO.write(integratedLED, integratedState);
