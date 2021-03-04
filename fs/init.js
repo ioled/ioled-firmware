@@ -18,6 +18,7 @@ load('tempo.js');
 load('mqtt.js');
 load('ds3231.js');
 load('mcp4725.js');
+load('mcp4017.js')
 
 // Initialize all led stored config, timer and ramp
 initEsp();

@@ -75,8 +75,6 @@ function cronCallbackTimer(arg) {
 	let minNow = rtc.getMinute();
 	let secNow = rtc.getSecond();
 
-	rtc.free();
-
 	print('[cronCallbackTimer] Hour: ' + JSON.stringify(hourNow));
 	print('[cronCallbackTimer] Minute: ' + JSON.stringify(minNow));
 	print('[cronCallbackTimer] Second: ' + JSON.stringify(secNow));
