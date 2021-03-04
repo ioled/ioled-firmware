@@ -14,7 +14,7 @@ let addrResistor = 47;
  */
 let changeResistor = function (duty) {
 	  print('[changeResistor] duty:', duty);
-	  let output = duty * 4095;
+	  let output = duty * 2047;
 	  let firstByte = (output>>4);
 	  let data = chr(firstByte);
 	  let result = I2C.write(i2c_MC4017, addrResistor, data, data.length, true);

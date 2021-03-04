@@ -135,6 +135,7 @@ let turnOffLed = function () {
 			normDuty(ledName);
 			PWM.set(led.pin, led.freq, led.duty);
 			dutyToAnalog(led.duty);
+			changeResistor(led.duty);
 			print('   ', ledName, 'intensity: ', led.duty);
 		}
 	}
@@ -169,10 +170,12 @@ let changeLED = function (ledName) {
 	if (Cfg.get('esp.timer.timerState')) {
 		PWM.set(led.pin, led.freq, led.duty);
 		dutyToAnalog(led.duty);
+		changeResistor(led.duty);
 		print('   ', ledName, 'intensity: ', led.duty);
 	} else {
 		PWM.set(led.pin, led.freq, led.duty);
 		dutyToAnalog(led.duty);
+		changeResistor(led.duty);
 		print('   ', ledName, 'intensity: ', led.duty);
 	}
 };
